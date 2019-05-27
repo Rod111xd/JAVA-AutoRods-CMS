@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
+	<link rel="stylesheet" href="../css/uikit.min.css" />
+	<link rel="stylesheet" href="../css/alertify.min.css" />
+	<link rel="stylesheet" href="../css/style.css" />
+	<style>
+		[data-entrance] { visibility: hidden; }
+	</style>
+	
+</h:head>
+
+<h:body>
+	<div id="registroForm" data-entrance="from-right">
+		<h:form>
+			<h1 class="uk-heading-small" style="margin:0;">Cadastrar <span class="uk-icon" uk-icon="icon:plus" ratio="2"></span></h1>
+			<span class="uk-icon" uk-icon="icon:user"></span>
+			<h:outputLabel class="uk-form-label">Nome de Usuário</h:outputLabel> 
+			<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{nomeRegistro}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
+			<span class="uk-icon" uk-icon="icon:mail"></span>
+			<h:outputLabel class="uk-form-label">Email</h:outputLabel> 
+			<h:inputText id="emailRegistro" name="emailRegistro" value="#{emailRegistro}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
+			<span class="uk-icon" uk-icon="icon:lock"></span>
+			<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
+			<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{senhaRegistro}" class="uk-input" p:placeholder="Senha"/><br/><br/>
+			<span class="uk-icon" uk-icon="icon:lock"></span>
+			<h:outputLabel class="uk-form-label">Confirmação de senha</h:outputLabel> 
+			<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
+			<h:commandButton value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
+			<h:outputLink value="#" onclick="mudarFormulario('registro')">Já possui uma conta? Clique aqui.</h:outputLink> 
+		</h:form>
+	</div>
+    
+    <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+	<script src="../js/uikit.min.js"></script>
+	<script src="../js/uikit-icons.min.js"></script>
+	<script src="../js/alertify.min.js"></script>
+	<script src="../js/javinha.js"></script>
+	<script src="../js/scroll-entrance.js"></script>
+</h:body>
+</html>
