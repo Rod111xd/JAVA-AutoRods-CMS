@@ -24,11 +24,11 @@
 			<h1 class="uk-heading-small" style="margin:0;">Entrar <span class="uk-icon" uk-icon="icon:sign-in" ratio="2"></span></h1>
 			<span class="uk-icon" uk-icon="icon:mail"></span>
 			<h:outputLabel class="uk-form-label">E-mail</h:outputLabel> 
-			<h:inputText id="emailLogin" name="emailLogin" value="#{emailLogin}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
+			<h:inputText id="emailLogin" name="emailLogin" value="#{UserLogin.email}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
 			<span class="uk-icon" uk-icon="icon:lock"></span>
 			<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
-			<h:inputSecret id="senhaLogin" name="senhaLogin" value="#{senhaLogin}" class="uk-input" p:placeholder="Senha"/><br/><br/>
-			<h:commandButton value="Entrar" class="uk-button uk-button-secondary"/> <br/>
+			<h:inputSecret id="senhaLogin" name="senhaLogin" value="#{UserLogin.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
+			<h:commandButton action="#{UserLogin.login()}" value="Entrar" class="uk-button uk-button-secondary"/> <br/>
 			<h:outputLink value="#" onclick="mudarFormulario('login')">Não possui uma conta? Clique aqui!</h:outputLink>
 		</h:form>
 	</div>

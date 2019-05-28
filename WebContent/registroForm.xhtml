@@ -24,17 +24,17 @@
 			<h1 class="uk-heading-small" style="margin:0;">Cadastrar <span class="uk-icon" uk-icon="icon:plus" ratio="2"></span></h1>
 			<span class="uk-icon" uk-icon="icon:user"></span>
 			<h:outputLabel class="uk-form-label">Nome de Usuário</h:outputLabel> 
-			<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{nomeRegistro}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
+			<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{UserAdd.name}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
 			<span class="uk-icon" uk-icon="icon:mail"></span>
 			<h:outputLabel class="uk-form-label">Email</h:outputLabel> 
-			<h:inputText id="emailRegistro" name="emailRegistro" value="#{emailRegistro}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
+			<h:inputText id="emailRegistro" name="emailRegistro" value="#{UserAdd.email}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
 			<span class="uk-icon" uk-icon="icon:lock"></span>
 			<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
-			<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{senhaRegistro}" class="uk-input" p:placeholder="Senha"/><br/><br/>
+			<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{UserAdd.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
 			<span class="uk-icon" uk-icon="icon:lock"></span>
 			<h:outputLabel class="uk-form-label">Confirmação de senha</h:outputLabel> 
 			<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
-			<h:commandButton value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
+			<h:commandButton action="#{UserAdd.addUser()}" value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
 			<h:outputLink value="#" onclick="mudarFormulario('registro')">Já possui uma conta? Clique aqui.</h:outputLink> 
 		</h:form>
 	</div>
