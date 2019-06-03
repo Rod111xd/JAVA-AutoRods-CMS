@@ -9,9 +9,9 @@
 
 <h:head>
 	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
-	<link rel="stylesheet" href="../css/uikit.min.css" />
-	<link rel="stylesheet" href="../css/alertify.min.css" />
-	<link rel="stylesheet" href="../css/style.css" />
+	<h:outputStylesheet  name="css/uikit.min.css" />
+	<h:outputStylesheet  name="css/alertify.min.css" />
+	<h:outputStylesheet  name="css/style.css" />
 	<style>
 		[data-entrance] { visibility: hidden; }
 	</style>
@@ -28,17 +28,18 @@
 			<span class="uk-icon" uk-icon="icon:lock"></span>
 			<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
 			<h:inputSecret id="senhaLogin" name="senhaLogin" value="#{UserLogin.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
-			<h:commandButton action="#{UserLogin.login()}" value="Entrar" class="uk-button uk-button-secondary"/> <br/>
-			<h:outputLink value="#" onclick="mudarFormulario('login')">Não possui uma conta? Clique aqui!</h:outputLink>
+			<h:commandButton action="#{UserLogin.login}" value="Entrar" class="uk-button uk-button-secondary"/> <br/>
+			<h:outputLink value="#" onclick="mudarFormulario('registro')">Não possui uma conta? Clique aqui!</h:outputLink> <br/>
+			<h:outputLink value="#" onclick="mudarFormulario('adminLogin')">Administrador</h:outputLink>
 		</h:form>
 	</div>
 	
-	<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
-	<script src="../js/uikit.min.js"></script>
-	<script src="../js/uikit-icons.min.js"></script>
-	<script src="../js/alertify.min.js"></script>
-	<script src="../js/javinha.js"></script>
-	<script src="../js/scroll-entrance.js"></script>
+	<h:outputScript  name="js/jquery-3.3.1.min.js" />
+	<h:outputScript  name="js/uikit.min.js" />
+	<h:outputScript  name="js/uikit-icons.min.js" />
+	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/javinha.js" />
+	<h:outputScript  name="js/scroll-entrance.js" />
 </h:body>
 
 </html>

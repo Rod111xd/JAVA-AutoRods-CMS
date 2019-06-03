@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
+	<h:outputStylesheet  name="css/uikit.min.css" />
+	<h:outputStylesheet  name="css/alertify.min.css" />
+	<h:outputStylesheet  name="css/style.css" />
+	<title>Criar publicação</title>
+</h:head>
+
+<h:body>
+	<div class="header-img"></div>
+	<div id="menu" class="uk-navbar-container uk-light" style="background-color:#1e1e1e">
+		<div class="uk-navbar" uk-navbar="">
+		    <div class="uk-navbar-left">
+		
+		        <ul class="uk-navbar-nav">
+		            <li class="uk-active"><a href="index.xhtml"><span class="uk-icon" uk-icon="icon:home"></span> Início</a></li>
+		        </ul>
+		
+		    </div>
+			<div class="uk-navbar-center">
+		            AUTORODS - O SITE SOBRE O MUNDO DAS RODAS
+
+		    </div>
+		    <div class="uk-navbar-right">
+		        <ul class="uk-navbar-nav">
+		        	<li class="uk-active"><h:outputLink value="logout.xhtml"><span class="uk-icon" uk-icon="icon:sign-out"></span> Sair</h:outputLink></li>
+		        </ul>
+		
+		    </div>
+		
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="uk-grid contentGrid" uk-grid="">
+		    <div class="uk-width-1-3@s uk-width-1-3@l">
+			    <div class="content-box1">
+			    	<div class="adminDetails">
+			    		<h:outputText value="#{AdminLogin.name}"/>
+			    	</div>
+			    	<div class="lateral-menu">
+			    		<h:form>
+							<h:outputLabel class="uk-form-label">PESQUISA</h:outputLabel>
+							<h:inputText id="pesquisa" name="pesquisa" value="#{pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
+							<h:commandButton value="Pesquisar" class="uk-button uk-button-secondary"/>
+					    </h:form>
+			    	</div>
+			    </div>
+		    </div>
+		    <div class="uk-width-2-3@s uk-width-2-3@l">
+			    <div class="content-box2">
+			    	<h:form enctype="multipart/form-data">
+					    <div class="uk-grid uk-grid-divider contentGrid" uk-grid="">
+						    <div class="uk-width-1-3@s uk-width-1-3@l">
+						    
+						    	<div id="image-preview" class='image-preview'>
+						    	
+									<h:outputLabel for='image-upload' id="image-label" class='image-label'>Capa</h:outputLabel>
+		  							<h:inputFile name='img' class='image-upload' id="image-upload" value="#{PostAdd.arquivo}" accept='image/*' />
+								</div>
+								
+						    </div>
+						    <div class="uk-width-2-3@s uk-width-2-3@l">
+						    	<h:outputLabel class="uk-form-label">Título</h:outputLabel>
+								<h:inputText id="title" name="title" value="#{PostAdd.title}" class="uk-input" p:placeholder="Título da publicação"/> <br/>
+								<h:outputLabel class="uk-form-label">Subtítulo</h:outputLabel>
+								<h:inputText id="subtitle" name="subtitle" value="#{PostAdd.subtitle}" class="uk-input" p:placeholder="Subtítulo da publicação"/> <br/>
+								<div class="uk-grid-small" uk-grid="">
+								    <div class="uk-width-1-2">
+								    	<h:outputLabel class="uk-form-label">Tipo</h:outputLabel>
+								    	<h:selectOneMenu id="type" name="type" class="uk-select" value="#{PostAdd.type}">
+								    		<f:selectItem itemValue="news" itemLabel="Notícia" />
+								    		<f:selectItem itemValue="curiosity" itemLabel="Curiosidade" />
+								    		<f:selectItem itemValue="tips" itemLabel="Dica" />
+								    	</h:selectOneMenu>
+								    </div>
+								    <div class="uk-width-1-2">
+										<h:selectOneCheckbox value = "#{PostAdd.category}"> 
+										   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
+										   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
+										   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
+										   <f:selectItem itemValue = "truck" itemLabel = "Caminhão" />
+										</h:selectOneCheckbox>
+								    </div>
+								</div>
+						    </div>
+						    <div class="uk-width-1-1@s uk-width-1-1@l">
+						    	<h:inputTextarea id="text" name="text" value="#{PostAdd.text}" class="uk-textarea textArea"/>
+						    </div>
+						</div>
+						<br/>
+						<h:inputHidden id="idAdmin" name="idAdmin" value="#{AdminLogin.id}"></h:inputHidden>
+						<h:commandButton action="#{PostAdd.addPost}" class="uk-button uk-button-secondary" value="Publicar"/>
+					</h:form>
+			    </div>
+		    </div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<h:outputScript  name="js/jquery-3.3.1.min.js" />
+	<h:outputScript  name="js/uikit.min.js" />
+	<h:outputScript  name="js/uikit-icons.min.js" />
+	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/uploadPreview.min.js" />
+	<h:outputScript  name="js/jquery.imgcheckbox.js" />
+	<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
+	<h:outputScript>
+		var pesq = document.getElementsByClassName("content-box1");
+		if (window.matchMedia('(min-width: 640px)').matches){
+			UIkit.sticky(pesq[0],{offset: 20});
+		}
+		
+		$(document).ready(function() {
+		  	$.uploadPreview({
+			    input_field: '.image-upload',
+			    preview_box: '.image-preview',
+			    label_field: '.image-label',
+			    label_default: 'Escolher',
+			    label_selected: 'Mudar',
+			    no_label: false
+		  	});
+		}); 
+		var cw = $('#image-preview').width();
+		$('#image-preview').css({'height':cw+'px'});
+		
+		tinymce.init({selector:'textarea'});
+		
+		
+	</h:outputScript>
+	
+</h:body>
+
+</html>

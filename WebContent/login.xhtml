@@ -9,9 +9,10 @@
 
 <h:head>
 	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
-	<link rel="stylesheet" href="../css/uikit.min.css" />
-	<link rel="stylesheet" href="../css/alertify.min.css" />
-	<link rel="stylesheet" href="../css/style.css" />
+	<h:outputStylesheet  name="css/uikit.min.css" />
+	<h:outputStylesheet  name="css/alertify.min.css" />
+	<h:outputStylesheet  name="css/style.css" />
+	<title>Entrar/Registrar</title>
 </h:head>
 
 <h:body>
@@ -20,7 +21,7 @@
 			<div class="uk-grid contentGrid">
 			<f:attribute name="uk-grid" value=""/>
 			    <div class="uk-width-1-3@s uk-width-1-3@l descContent">
-				    
+				    <h:outputLink class="uk-button uk-button-primary" value="index.xhtml">Voltar</h:outputLink>
 			    </div>
 			    <div class="uk-width-1-3@s uk-width-1-3@l loginContent">
 			    
@@ -35,20 +36,13 @@
 	
 	
 	
-	<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
-	<script src="../js/uikit.min.js"></script>
-	<script src="../js/uikit-icons.min.js"></script>
-	<script src="../js/alertify.min.js"></script>
-	<script src="../js/javinha.js"></script>
+	<h:outputScript  name="js/jquery-3.3.1.min.js" />
+	<h:outputScript  name="js/uikit.min.js" />
+	<h:outputScript  name="js/uikit-icons.min.js" />
+	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/javinha.js" />
 	<script>
-		var menu = document.getElementById("menu");
-		var pesq = document.getElementsByClassName("content-box1");
-		if (window.matchMedia('(min-width: 640px)').matches){
-			UIkit.sticky(menu);
-			UIkit.sticky(pesq[0],{offset: 80});
-		}
-		
-		mudarFormulario('registro');
+		mudarFormulario('login');
 	</script>
 </h:body>
 </html>

@@ -9,9 +9,9 @@
 
 <h:head>
 	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
-	<link rel="stylesheet" href="../css/uikit.min.css" />
-	<link rel="stylesheet" href="../css/alertify.min.css" />
-	<link rel="stylesheet" href="../css/style.css" />
+	<h:outputStylesheet  name="css/uikit.min.css" />
+	<h:outputStylesheet  name="css/alertify.min.css" />
+	<h:outputStylesheet  name="css/style.css" />
 	<style>
 		[data-entrance] { visibility: hidden; }
 	</style>
@@ -20,30 +20,72 @@
 
 <h:body>
 	<div id="registroForm" data-entrance="from-right">
-		<h:form>
-			<h1 class="uk-heading-small" style="margin:0;">Cadastrar <span class="uk-icon" uk-icon="icon:plus" ratio="2"></span></h1>
-			<span class="uk-icon" uk-icon="icon:user"></span>
-			<h:outputLabel class="uk-form-label">Nome de Usuário</h:outputLabel> 
-			<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{UserAdd.name}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
-			<span class="uk-icon" uk-icon="icon:mail"></span>
-			<h:outputLabel class="uk-form-label">Email</h:outputLabel> 
-			<h:inputText id="emailRegistro" name="emailRegistro" value="#{UserAdd.email}" class="uk-input" p:placeholder="E-mail"/><br/><br/>
-			<span class="uk-icon" uk-icon="icon:lock"></span>
-			<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
-			<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{UserAdd.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
-			<span class="uk-icon" uk-icon="icon:lock"></span>
-			<h:outputLabel class="uk-form-label">Confirmação de senha</h:outputLabel> 
-			<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
+		<h:form enctype="multipart/form-data">
+			<h1 class="uk-heading-small" style="margin:0;">Cadastrar <span class="uk-icon" uk-icon="icon:plus-circle" ratio="2"></span></h1>
+			<div class="uk-grid uk-grid-small" uk-grid="">
+				<div class="uk-width-1-2">
+					<span class="uk-icon" uk-icon="icon:user"></span>
+					<h:outputLabel class="uk-form-label">Nome de Usuário</h:outputLabel> 
+					<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{UserAdd.name}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
+					<span class="uk-icon" uk-icon="icon:mail"></span>
+					<h:outputLabel class="uk-form-label">Email</h:outputLabel> 
+					<h:inputText id="emailRegistro" name="emailRegistro" value="#{UserAdd.email}" class="uk-input" p:placeholder="E-mail"/>
+				</div>
+				<div class="uk-width-1-2">
+					
+					<div id='image-preview' class="image-preview">
+						<h:outputLabel for='image-upload' id='image-label' class="image-label">Avatar</h:outputLabel>
+						<h:inputFile name='img' id='image-upload' class="image-upload" value="#{UserAdd.arquivo}" accept='image/*' />
+					</div>
+					
+				</div>
+			</div>
+			<div class="uk-grid uk-grid-small" uk-grid="">
+				<div class="uk-width-1-2">
+					<span class="uk-icon" uk-icon="icon:lock"></span>
+					<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
+					<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{UserAdd.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
+				</div>
+				<div class="uk-width-1-2">
+					<span class="uk-icon" uk-icon="icon:lock"></span>
+					<h:outputLabel class="uk-form-label">Confirmação de senha</h:outputLabel> 
+					<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
+				</div>
+			</div>
+			<h:selectManyCheckbox value = "#{UserAdd.preferences}"> 
+			   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
+			   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
+			   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
+			   <f:selectItem itemValue = "truck" itemLabel = "Caminhão" />
+			</h:selectManyCheckbox>
+			
+			
+			
 			<h:commandButton action="#{UserAdd.addUser()}" value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
-			<h:outputLink value="#" onclick="mudarFormulario('registro')">Já possui uma conta? Clique aqui.</h:outputLink> 
+			<h:outputLink value="#" onclick="mudarFormulario('login')">Já possui uma conta? Clique aqui.</h:outputLink> 
 		</h:form>
 	</div>
     
-    <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
-	<script src="../js/uikit.min.js"></script>
-	<script src="../js/uikit-icons.min.js"></script>
-	<script src="../js/alertify.min.js"></script>
-	<script src="../js/javinha.js"></script>
-	<script src="../js/scroll-entrance.js"></script>
+    <h:outputScript  name="js/jquery-3.3.1.min.js" />
+	<h:outputScript  name="js/uikit.min.js" />
+	<h:outputScript  name="js/uikit-icons.min.js" />
+	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/javinha.js" />
+	<h:outputScript  name="js/scroll-entrance.js" />
+	<h:outputScript  name="js/uploadPreview.min.js" />
+	<h:outputScript>
+		$(document).ready(function() {
+		  $.uploadPreview({
+		    input_field: '.image-upload',
+		    preview_box: '.image-preview',
+		    label_field: '.image-label',
+		    label_default: 'Escolher',
+		    label_selected: 'Mudar',
+		    no_label: false
+		  });
+		});
+		var cw = $('#image-preview').width() - 30;
+		$('#image-preview').css({'height':cw+'px'});
+	</h:outputScript>
 </h:body>
 </html>
