@@ -49,6 +49,7 @@ body {
 	padding:30px;
 }
 .cardImage {
+	width:100%;
 	height: 200px !important;
 }
 

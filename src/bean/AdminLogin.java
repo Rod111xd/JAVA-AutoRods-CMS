@@ -43,6 +43,7 @@ public class AdminLogin {
 		Admin newAdmin = new AdminControl().login(admin);
 		if(newAdmin!=null) {
 			System.out.println("deu certo");
+			this.setId(newAdmin.getId());
 			this.logged = true;
 			return "index";
 		}else {

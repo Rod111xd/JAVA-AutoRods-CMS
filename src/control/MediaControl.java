@@ -39,13 +39,13 @@ public class MediaControl {
 		return result;
 	}
 	
-	public Media selectMedia(int id) {
+	public Media selectMediaByPost(int id_post) {
 		Media result= null;
 		try {
 			Connection connect = new Conexao().abrirConexao();
-			String sql="SELECT * FROM Media WHERE id=?";
+			String sql="SELECT * FROM Media WHERE id_post=?";
 			PreparedStatement ps= connect.prepareStatement(sql);
-			ps.setInt(1, id);
+			ps.setInt(1, id_post);
 			ResultSet rs= ps.executeQuery();
 			if(rs.next()){
 				result = new Media(rs.getInt("id"),rs.getString("urlMedia"),rs.getInt("id_post"),rs.getInt("id_user"));

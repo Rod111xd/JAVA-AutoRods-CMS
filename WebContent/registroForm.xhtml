@@ -26,16 +26,16 @@
 				<div class="uk-width-1-2">
 					<span class="uk-icon" uk-icon="icon:user"></span>
 					<h:outputLabel class="uk-form-label">Nome de Usuário</h:outputLabel> 
-					<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{UserAdd.name}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
+					<h:inputText id="nomeRegistro" name="nomeRegistro" value="#{UserBean.name}" class="uk-input" p:placeholder="Usuário"/><br/><br/>
 					<span class="uk-icon" uk-icon="icon:mail"></span>
 					<h:outputLabel class="uk-form-label">Email</h:outputLabel> 
-					<h:inputText id="emailRegistro" name="emailRegistro" value="#{UserAdd.email}" class="uk-input" p:placeholder="E-mail"/>
+					<h:inputText id="emailRegistro" name="emailRegistro" value="#{UserBean.email}" class="uk-input" p:placeholder="E-mail"/>
 				</div>
 				<div class="uk-width-1-2">
 					
 					<div id='image-preview' class="image-preview">
 						<h:outputLabel for='image-upload' id='image-label' class="image-label">Avatar</h:outputLabel>
-						<h:inputFile name='img' id='image-upload' class="image-upload" value="#{UserAdd.arquivo}" accept='image/*' />
+						<h:inputFile name='img' id='image-upload' class="image-upload" value="#{UserBean.arquivo}" accept='image/*' />
 					</div>
 					
 				</div>
@@ -44,7 +44,7 @@
 				<div class="uk-width-1-2">
 					<span class="uk-icon" uk-icon="icon:lock"></span>
 					<h:outputLabel class="uk-form-label">Senha</h:outputLabel> 
-					<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{UserAdd.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
+					<h:inputSecret id="senhaRegistro" name="senhaRegistro" value="#{UserBean.password}" class="uk-input" p:placeholder="Senha"/><br/><br/>
 				</div>
 				<div class="uk-width-1-2">
 					<span class="uk-icon" uk-icon="icon:lock"></span>
@@ -52,7 +52,7 @@
 					<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
 				</div>
 			</div>
-			<h:selectManyCheckbox value = "#{UserAdd.preferences}"> 
+			<h:selectManyCheckbox value = "#{UserBean.preferences}"> 
 			   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
 			   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
 			   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
@@ -61,7 +61,7 @@
 			
 			
 			
-			<h:commandButton action="#{UserAdd.addUser()}" value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
+			<h:commandButton action="#{UserBean.addUser()}" value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
 			<h:outputLink value="#" onclick="mudarFormulario('login')">Já possui uma conta? Clique aqui.</h:outputLink> 
 		</h:form>
 	</div>

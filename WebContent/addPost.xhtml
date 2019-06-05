@@ -65,41 +65,40 @@
 						    	<div id="image-preview" class='image-preview'>
 						    	
 									<h:outputLabel for='image-upload' id="image-label" class='image-label'>Capa</h:outputLabel>
-		  							<h:inputFile name='img' class='image-upload' id="image-upload" value="#{PostAdd.arquivo}" accept='image/*' />
+		  							<h:inputFile name='img' class='image-upload' id="image-upload" value="#{PostBean.arquivo}" accept='image/*' />
 								</div>
 								
 						    </div>
 						    <div class="uk-width-2-3@s uk-width-2-3@l">
 						    	<h:outputLabel class="uk-form-label">Título</h:outputLabel>
-								<h:inputText id="title" name="title" value="#{PostAdd.title}" class="uk-input" p:placeholder="Título da publicação"/> <br/>
+								<h:inputText id="title" name="title" value="#{PostBean.title}" class="uk-input" p:placeholder="Título da publicação"/> <br/>
 								<h:outputLabel class="uk-form-label">Subtítulo</h:outputLabel>
-								<h:inputText id="subtitle" name="subtitle" value="#{PostAdd.subtitle}" class="uk-input" p:placeholder="Subtítulo da publicação"/> <br/>
+								<h:inputText id="subtitle" name="subtitle" value="#{PostBean.subtitle}" class="uk-input" p:placeholder="Subtítulo da publicação"/> <br/>
 								<div class="uk-grid-small" uk-grid="">
 								    <div class="uk-width-1-2">
 								    	<h:outputLabel class="uk-form-label">Tipo</h:outputLabel>
-								    	<h:selectOneMenu id="type" name="type" class="uk-select" value="#{PostAdd.type}">
+								    	<h:selectOneMenu id="type" name="type" class="uk-select" value="#{PostBean.type}">
 								    		<f:selectItem itemValue="news" itemLabel="Notícia" />
 								    		<f:selectItem itemValue="curiosity" itemLabel="Curiosidade" />
 								    		<f:selectItem itemValue="tips" itemLabel="Dica" />
 								    	</h:selectOneMenu>
 								    </div>
 								    <div class="uk-width-1-2">
-										<h:selectOneCheckbox value = "#{PostAdd.category}"> 
+										<h:selectOneRadio value = "#{PostBean.category}"> 
 										   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
 										   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
 										   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
 										   <f:selectItem itemValue = "truck" itemLabel = "Caminhão" />
-										</h:selectOneCheckbox>
+										</h:selectOneRadio>
 								    </div>
 								</div>
 						    </div>
 						    <div class="uk-width-1-1@s uk-width-1-1@l">
-						    	<h:inputTextarea id="text" name="text" value="#{PostAdd.text}" class="uk-textarea textArea"/>
+						    	<h:inputTextarea id="text" name="text" value="#{PostBean.text}" class="uk-textarea textArea"/>
 						    </div>
 						</div>
 						<br/>
-						<h:inputHidden id="idAdmin" name="idAdmin" value="#{AdminLogin.id}"></h:inputHidden>
-						<h:commandButton action="#{PostAdd.addPost}" class="uk-button uk-button-secondary" value="Publicar"/>
+						<h:commandButton action="#{PostBean.addPost(AdminLogin.id)}" class="uk-button uk-button-secondary" value="Publicar"/>
 					</h:form>
 			    </div>
 		    </div>

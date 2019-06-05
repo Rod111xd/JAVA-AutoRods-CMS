@@ -27,7 +27,7 @@ public class PostControl {
 			ps.setString(4, post.getType());
 			ps.setString(5, post.getCategory());
 			ps.setString(6, post.getDate());
-			ps.setInt(7, post.getViews());
+			ps.setInt(7, 0);
 			ps.setInt(8, post.getIdAdmin());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
@@ -66,7 +66,8 @@ public class PostControl {
 			if(rs!=null) {
 				list = new ArrayList<Post>();
 				while(rs.next()) {
-					Post post= new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),rs.getString("type"),rs.getString("category"),rs.getString("date"),rs.getInt("views"),rs.getInt("admin"));
+					Media md = new MediaControl().selectMediaByPost(rs.getInt("id"));
+					Post post= new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),rs.getString("type"),rs.getString("category"),rs.getString("date"),rs.getInt("views"),rs.getInt("id_admin"),md.getUrlMedia());
 					list.add(post);
 				}
 				new Conexao().fecharConexao(connect);
@@ -86,7 +87,8 @@ public class PostControl {
 			ps.setInt(1, id);
 			ResultSet rs= ps.executeQuery();
 			if(rs.next()){
-				result = new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),rs.getString("type"),rs.getString("category"),rs.getString("date"),rs.getInt("views"),rs.getInt("admin"));
+				Media md = new MediaControl().selectMediaByPost(rs.getInt("id"));
+				result = new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),rs.getString("type"),rs.getString("category"),rs.getString("date"),rs.getInt("views"),rs.getInt("id_admin"),md.getUrlMedia());
 			}
 			new Conexao().fecharConexao(connect);
 		}catch(Exception e) {

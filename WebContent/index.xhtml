@@ -5,6 +5,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
@@ -24,7 +25,7 @@
 		        <ul class="uk-navbar-nav">
 		            <li class="uk-active"><h:outputLink value="index.xhtml"><span class="uk-icon" uk-icon="icon:home"></span> Início</h:outputLink></li>
 		            <h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
-						<li class="uk-active"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Dudu</h:outputLink></li>
+						<li class="uk-active"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
 					</h:panelGroup>
 		        </ul>
 		
@@ -77,41 +78,25 @@
 		    <div class="uk-width-2-3@s uk-width-2-3@l">
 			    <div class="content-box2">
 				    <div class="uk-grid contentGrid" uk-grid="">
-					    <div class="uk-width-1-2@s uk-width-1-2@l">
-					    
-							<div class="uk-card uk-card-default uk-card-small uk-card-hover">
-								<div class="uk-card-media-top">
-					                <h:graphicImage  name="imgs/bonito3.jpg" class="avatar"/>
-					            </div>
-					            <div class="uk-card-body">
-					                <h3 class="uk-card-title">Media Top</h3>
-					                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-					            </div>
-							</div>
-					
-					    </div>
-					    <div class="uk-width-1-2@s uk-width-1-2@l">
-							<div class="uk-card uk-card-default uk-card-small uk-card-hover">
-								<div class="uk-card-media-top">
-									<h:graphicImage  name="imgs/bonito3.jpg" class="cardImage"/>
-					            </div>
-					            <div class="uk-card-body">
-					                <h3 class="uk-card-title">Media Top</h3>
-					                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-					            </div>
-							</div>
-					    </div>
-					    <div class="uk-width-1-2@s uk-width-1-2@l">
-							<div class="uk-card uk-card-default uk-card-small uk-card-hover">
-								<div class="uk-card-media-top">
-					                <h:graphicImage  name="imgs/bonito3.jpg" class="cardImage"/>
-					            </div>
-					            <div class="uk-card-body">
-					                <h3 class="uk-card-title">Media Top</h3>
-					                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-					            </div>
-							</div>
-					    </div>
+						<c:forEach var="post"  items="#{PostBean.getList()}">
+							
+					    	<div class='uk-width-1-2@s uk-width-1-2@l'>
+								<div class='uk-card uk-card-default uk-card-small uk-card-hover'>
+									<div class='uk-card-media-top'>
+						                <h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
+						            </div>
+						            <div class='uk-card-body'>
+						                <h3 class='uk-card-title'>
+						                #{post.title}
+						                <h:panelGroup rendered="#{AdminLogin.logged}">
+						                	<span class="uk-icon" uk-icon="icon:close"></span>
+						                </h:panelGroup>
+						                </h3>
+						                <p>#{post.subtitle}</p>
+						            </div>
+								</div>
+						    </div>
+						</c:forEach>
 					</div>
 			    </div>
 		    </div>

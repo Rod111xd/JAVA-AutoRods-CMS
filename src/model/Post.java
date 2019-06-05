@@ -10,6 +10,7 @@ public class Post {
 	private String date;
 	private int views;
 	private int idAdmin;
+	private String urlMedia;
 	
 	public int getId() {
 		return id;
@@ -65,8 +66,14 @@ public class Post {
 	public void setIdAdmin(int idAdmin) {
 		this.idAdmin = idAdmin;
 	}
+	public String getUrlMedia() {
+		return urlMedia;
+	}
+	public void setUrlMedia(String urlMedia) {
+		this.urlMedia = urlMedia;
+	}
 	
-	public Post(int id, String title, String subtitle, String text, String type, String category, String date, int views, int idAdmin) {
+	public Post(int id, String title, String subtitle, String text, String type, String category, String date, int views, int idAdmin, String urlMedia) {
 		this.id = id;
 		this.title = title;
 		this.subtitle = subtitle;
@@ -76,6 +83,7 @@ public class Post {
 		this.date = date;
 		this.views = views;
 		this.idAdmin = idAdmin;
+		this.urlMedia = urlMedia;
 	}
 	
 	
