@@ -66,38 +66,76 @@
 				    		<h:graphicImage  name="#{UserLogin.avatar}" class="cardImage"/>
 				    	</div>
 					</h:panelGroup>
-				    <div class="lateral-menu">
-				    	<h:form>
+				    <div class="uk-inline lateral-menu">
+				    	<h:form id="searchForm">
 				    		<h:outputLabel class="uk-form-label">PESQUISA</h:outputLabel>
-							<h:inputText id="pesquisa" name="pesquisa" value="#{pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
-							<h:commandButton value="Pesquisar" class="uk-button uk-button-secondary"/>
+							<h:inputText id="pesquisa" name="pesquisa" value="#{PostBean.pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
+							<h:commandButton action="#{PostBean.searchTitle()}" value="Pesquisar" class="uk-button uk-button-secondary">
+								<f:ajax execute="pesquisa" render="postsRepeat"/>
+								<f:ajax render="cleanSearch"/>
+							</h:commandButton>
+							<h:panelGroup id="cleanSearch">
+								<h:form rendered="#{not empty PostBean.pesquisa}">
+									<h:commandButton class="uk-button" value="Limpar">
+										<f:ajax listener="#{PostBean.cleanSearch()}" render="searchForm:pesquisa"/>
+										<f:ajax execute="pesquisa" render="postsRepeat"/>
+										<f:ajax render="searchForm:cleanSearch"/>
+									</h:commandButton>
+								</h:form>
+							</h:panelGroup>
 					    </h:form>
+					    <h:panelGroup rendered="#{AdminLogin.logged}">
+					    	<hr class="uk-divider-icon"/>
+					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Criar publicação</h:outputLink>
+					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Minhas publicações</h:outputLink>
+					    </h:panelGroup>
 				    </div>
 			    </div>
 		    </div>
 		    <div class="uk-width-2-3@s uk-width-2-3@l">
 			    <div class="content-box2">
-				    <div class="uk-grid contentGrid" uk-grid="">
-						<c:forEach var="post"  items="#{PostBean.getList()}">
-							
-					    	<div class='uk-width-1-2@s uk-width-1-2@l'>
-								<div class='uk-card uk-card-default uk-card-small uk-card-hover'>
-									<div class='uk-card-media-top'>
-						                <h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
-						            </div>
-						            <div class='uk-card-body'>
-						                <h3 class='uk-card-title'>
-						                #{post.title}
-						                <h:panelGroup rendered="#{AdminLogin.logged}">
-						                	<span class="uk-icon" uk-icon="icon:close"></span>
-						                </h:panelGroup>
-						                </h3>
-						                <p>#{post.subtitle}</p>
-						            </div>
-								</div>
-						    </div>
-						</c:forEach>
-					</div>
+			    	<h:panelGroup id="postsRepeat">
+				    	<div class="uk-grid contentGrid" uk-grid="">
+				    		<h:panelGrid rendered="#{empty PostBean.list}">
+			    				<p>Não há o que exibir :(</p>
+			    			</h:panelGrid>
+				    		<ui:repeat var="post" value="#{PostBean.list}">
+						    	<div class='uk-width-1-2@s uk-width-1-2@l'>
+									<div class='uk-card uk-card-default uk-card-small uk-card-hover'>
+										<div class='uk-card-media-top'>
+											<h:link outcome="content.xhtml?id=#{post.id}">
+												<h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
+												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 5%" value="#">#{post.category}</h:outputLink>
+												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 13%" value="#">#{post.type}</h:outputLink>
+												<h:panelGroup class="uk-position-absolute uk-transform-center" rendered="#{AdminLogin.logged}" style="left: 90%; top: 8%">
+								                	<div class="uk-inline">
+												    	<span class="uk-icon-button" uk-icon="icon: cog;ratio:1.6"></span>
+													    <div uk-dropdown="mode: click">
+													    	<h:form>
+										                		<h3><h:commandLink action="#{PostBean.delete(post.id)}" value=" X "/></h3>
+										                	</h:form>
+										                	<h:form>
+										                		<h:outputLink value="editPost.xhtml?id=#{post.id}"><span class="uk-icon" uk-icon="icon:pencil"></span></h:outputLink>
+										                	</h:form>
+													    </div>
+													</div>
+								                </h:panelGroup>
+											</h:link>
+							            </div>
+							            <div class='uk-card-body'>
+							                <h3 class='uk-card-title'>
+							                <h:link outcome="content.xhtml?id=#{post.id}" class="noLink">
+							                	#{post.title}
+							                </h:link>
+							                </h3>
+							                
+							                <p>#{post.subtitle}</p>
+							            </div>
+									</div>
+							    </div>
+							</ui:repeat>
+						</div>
+					</h:panelGroup>
 			    </div>
 		    </div>
 		</div>

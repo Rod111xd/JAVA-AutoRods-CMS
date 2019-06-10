@@ -1,10 +1,14 @@
 package control;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import model.Media;
 
@@ -85,20 +89,15 @@ public class MediaControl {
 		boolean result = false;
 		try {
 			Connection connect= new Conexao().abrirConexao();
-			String sql="UPDATE Media SET urlMedia=?,id_post=?,id_user=? WHERE id=?";
+			String sql="UPDATE Media SET urlMedia=?,id_user=? WHERE id_post=?";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setString(1, media.getUrlMedia());
-			if(media.getIdPost()!=0) {
-				ps.setInt(2, media.getIdPost());
+			if(media.getIdUser()!=0) {
+				ps.setInt(2, media.getIdUser());
 			}else {
 				ps.setNull(2, Types.INTEGER);
 			}
-			if(media.getIdUser()!=0) {
-				ps.setInt(3, media.getIdUser());
-			}else {
-				ps.setNull(3, Types.INTEGER);
-			}
-			ps.setInt(4, media.getId());
+			ps.setInt(3, media.getIdPost());
 			if(!ps.execute()) {
 				result=true;
 			}
@@ -115,10 +114,12 @@ public class MediaControl {
 		boolean result = false;
 		try {
 			Connection connect= new Conexao().abrirConexao();
-			String sql="DELETE FROM Media WHERE id=?";
+			String sql="DELETE FROM Media WHERE id_post=?";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setInt(1, id);
 			if(!ps.execute()) {
+				String path = "C:\\Users\\Ronald\\eclipse-workspace\\AutoRods\\WebContent\\resources\\imgs\\posts\\"+id;
+				deleteFolder(path);
 				result=true;
 			}
 			new Conexao().fecharConexao(connect);
@@ -128,5 +129,9 @@ public class MediaControl {
 			System.out.println(e.getMessage());
 		}
 		return result;
+	}
+	
+	public void deleteFolder(String path) throws IOException {
+		FileUtils.deleteDirectory(new File(path));
 	}
 }

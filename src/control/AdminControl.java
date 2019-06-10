@@ -26,4 +26,22 @@ public class AdminControl {
 		}
 		return result;
 	}
+	
+	public Admin selectAdmin(int id) {
+		Admin result= null;
+		try {
+			Connection connect = new Conexao().abrirConexao();
+			String sql="SELECT * FROM Admin WHERE id=?";
+			PreparedStatement ps= connect.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs= ps.executeQuery();
+			if(rs.next()){
+				result = new Admin(rs.getInt("id"),rs.getString("name"),rs.getString("password"));
+			}
+			new Conexao().fecharConexao(connect);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return result;
+	}
 }

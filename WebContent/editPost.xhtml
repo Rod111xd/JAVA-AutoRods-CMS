@@ -12,10 +12,13 @@
 	<h:outputStylesheet  name="css/uikit.min.css" />
 	<h:outputStylesheet  name="css/alertify.min.css" />
 	<h:outputStylesheet  name="css/style.css" />
-	<title>Criar publicação</title>
+	<title>Editar publicação</title>
 </h:head>
 
 <h:body>
+	<f:metadata>
+		<f:event listener="#{PostBean.loadId(param['id'])}" type="preRenderView"/>
+	</f:metadata>
 	<div class="header-img"></div>
 	<div id="menu" class="uk-navbar-container uk-light" style="background-color:#1e1e1e">
 		<div class="uk-navbar" uk-navbar="">
@@ -65,7 +68,7 @@
 					    <div class="uk-grid uk-grid-divider contentGrid" uk-grid="">
 						    <div class="uk-width-1-3@s uk-width-1-3@l">
 						    
-						    	<div id="image-preview" class='image-preview'>
+						    	<div id="image-preview" class='image-preview image-preview-edit' style="background-image: url('#{resource[PostBean.urlMedia]}')">
 						    	
 									<h:outputLabel for='image-upload' id="image-label" class='image-label'>Capa</h:outputLabel>
 		  							<h:inputFile name='img' class='image-upload' id="image-upload" value="#{PostBean.arquivo}" accept='image/*' />
@@ -87,7 +90,7 @@
 								    	</h:selectOneMenu>
 								    </div>
 								    <div class="uk-width-1-2">
-										<h:selectOneRadio value = "#{PostBean.category}"> 
+										<h:selectOneRadio required="true" value = "#{PostBean.category}"> 
 										   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
 										   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
 										   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
@@ -101,7 +104,7 @@
 						    </div>
 						</div>
 						<br/>
-						<h:commandButton action="#{PostBean.addPost(AdminLogin.id)}" class="uk-button uk-button-secondary" value="Publicar"/>
+						<h:commandButton action="#{PostBean.editPost(PostBean.id,PostBean.idAdmin)}" class="uk-button uk-button-secondary" value="Publicar"/>
 					</h:form>
 			    </div>
 		    </div>

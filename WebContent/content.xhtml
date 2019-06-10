@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'/>
+	<h:outputStylesheet  name="css/uikit.min.css" />
+	<h:outputStylesheet  name="css/alertify.min.css" />
+	<h:outputStylesheet  name="css/comment.min.css" />
+	<h:outputStylesheet  name="css/style.css" />
+	<title>AutoRods</title>
+</h:head>
+
+<h:body>
+	<f:metadata>
+		<f:event listener="#{PostBean.loadId(param['id'])}" type="preRenderView"/>
+		<f:event listener="#{CommentBean.loadList(param['id'])}" type="preRenderView"/>
+	</f:metadata>
+	<div class="header-img"></div>
+	<div id="menu" class="uk-navbar-container uk-light" style="background-color:#1e1e1e">
+		<div class="uk-navbar" uk-navbar="">
+		    <div class="uk-navbar-left">
+		
+		        <ul class="uk-navbar-nav">
+		            <li class="uk-active"><h:outputLink value="index.xhtml"><span class="uk-icon" uk-icon="icon:home"></span> Início</h:outputLink></li>
+		            <h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
+						<li class="uk-active"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
+					</h:panelGroup>
+		        </ul>
+		
+		    </div>
+			<div class="uk-navbar-center">
+		            AUTORODS - O SITE SOBRE O MUNDO DAS RODAS
+
+		    </div>
+		    <div class="uk-navbar-right">
+		
+		        <ul class="uk-navbar-nav">
+			        <h:panelGroup layout="block" rendered="#{not AdminLogin.logged and not UserLogin.logged}">
+						<li class="uk-active"><h:outputLink value="login.xhtml"><span class="uk-icon" uk-icon="icon:sign-in"></span> Entrar</h:outputLink></li>
+					</h:panelGroup>
+
+					<h:panelGroup layout="block" rendered="#{AdminLogin.logged or UserLogin.logged}">
+						<li class="uk-active"><h:outputLink value="logout.xhtml"><span class="uk-icon" uk-icon="icon:sign-out"></span> Sair</h:outputLink></li>
+					</h:panelGroup>
+				</ul>
+		    </div>
+		
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="uk-grid contentGrid" uk-grid="">
+		    <div class="uk-width-1-3@s uk-width-1-3@l">
+			    <div class="content-box1">
+			    	<h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
+						<div class="adminDetails">
+				    		<h:outputText value="#{AdminLogin.name}"/>
+				    	</div>
+					</h:panelGroup>
+					<h:panelGroup layout="block" rendered="#{UserLogin.logged}">
+						<div class="userDetails">
+				    		<h:outputText value="#{UserLogin.name}"/>
+				    		<h:outputText rendered="#{not empty UserLogin.preferences}" value="#{UserLogin.preferences}"/>
+				    		<h:graphicImage  name="#{UserLogin.avatar}" class="cardImage"/>
+				    	</div>
+					</h:panelGroup>
+				    <div class="lateral-menu">
+				    	<h:form>
+				    		<h:outputLabel class="uk-form-label">PESQUISA</h:outputLabel>
+							<h:inputText id="pesquisa" name="pesquisa" value="#{pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
+							<h:commandButton value="Pesquisar" class="uk-button uk-button-secondary"/>
+					    </h:form>
+				    </div>
+			    </div>
+		    </div>
+		    <div class="uk-width-2-3@s uk-width-2-3@l">
+			    <div class="content-boxPost">
+			    	<h:graphicImage  name='#{PostBean.urlMedia}' class='postBanner'/>
+			    	<div class="postContent">
+			    		<h:outputLink class="uk-button uk-button-primary" value="index.xhtml">Voltar</h:outputLink>
+			    		<h1 class="uk-header">#{PostBean.title}</h1>
+			    		<h3 class="uk-header">#{PostBean.subtitle}</h3>
+			    		<h4><span class="uk-icon" uk-icon="icon: pencil"></span> #{PostBean.adminName}</h4>
+			    		<h4><span class="uk-icon" uk-icon="icon: clock"></span> #{PostBean.date}</h4>
+			    		<h4><span class="uk-icon" uk-icon="icon: bookmark"></span> #{PostBean.type}</h4>
+			    		<h4><span class="uk-icon" uk-icon="icon: tag"></span> #{PostBean.category}</h4>
+			    		<h4><span class="uk-icon" uk-icon="icon: world"></span> #{PostBean.views} visualização(s)</h4>
+			    		<h:panelGrid layout="block" rendered="#{AdminLogin.logged}">
+			    			<h:form>
+		                		<h:commandLink action="#{PostBean.delete(PostBean.id)}" value="Remover"/>
+		                	</h:form>
+		                		<h:outputLink value="editPost.xhtml?id=#{PostBean.id}">Editar</h:outputLink>
+			    		</h:panelGrid>
+			    		<div class="postText">
+			    			<h:outputText escape="false" value="#{PostBean.text}"></h:outputText>
+			    		</div>
+			    		<div class="ui comments">
+						    <h3 class="ui dividing header">Comentários</h3>
+						    <hr class="uk-divider-icon"/>
+						    <h:panelGroup>
+						    	<ui:repeat var="comment" value="#{CommentBean.list}">
+						    		<div class="comment" style="padding:0 !important">
+								        <a class="avatar">
+								        	<h:graphicImage class="commentImage" name='#{comment.urlMedia}'/>
+								        </a>
+								        <div class="content">
+								            <a class="author">#{comment.userName}</a>
+								            <div class="text">
+								                #{comment.content}
+								            </div>
+							            	<div class="actions">
+								                <a onclick="document.getElementById('formReply:idReply').value=#{comment.id};$('.divFormReply').show();"  class="reply">Responder</a>
+								                <a onclick="document.getElementById('formDelete:idDelete').value=#{comment.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+								            </div>
+								            
+								            <ui:repeat var="reply" value="#{comment.listComments}">
+								            	<div class="comments">
+										            <div class="comment">
+										                <a class="avatar">
+										                    <h:graphicImage class="commentImage" name='#{reply.urlMedia}'/>
+										                </a>
+										                <div class="content">
+										                    <a class="author">#{reply.userName}</a>
+										                    <div class="text">
+										                        #{reply.content}
+										                    </div>
+										                    <div class="actions">
+												                <a onclick="document.getElementById('formDelete:idDelete').value=#{reply.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+												            </div>
+										                </div>
+										            </div>
+										        </div>
+								            </ui:repeat>
+								        </div>
+								    </div>
+						    	</ui:repeat>
+						    	<div  class="divFormReply" style="display:none">
+				                    	<h:form id="formReply">
+									            <h:inputTextarea value="#{CommentBean.content}" class="uk-textarea replyForm"></h:inputTextarea><br/>
+									            <h:inputHidden id="idReply" class="idReply" value="#{CommentBean.id}"></h:inputHidden>
+												<h:commandButton class="uk-button uk-button-secondary" action="#{CommentBean.addReply(UserLogin.id,PostBean.id)}" value="Responder"/>
+												<span class="uk-button uk-button-primary" onclick="$('.divFormReply').hide()">Fechar</span>
+									    </h:form>
+			                    </div>
+						    	<h:panelGroup rendered="#{UserLogin.logged}">
+						    		<h:form>
+								            <h:inputTextarea id="com" value="#{CommentBean.content}" class="uk-textarea replyForm"></h:inputTextarea><br/>
+											<h:commandButton class="uk-button uk-button-secondary" action="#{CommentBean.addComment(UserLogin.id,PostBean.id)}" value="Enviar"/>
+								    </h:form>
+						    	</h:panelGroup>
+						    	
+						    </h:panelGroup>
+						</div>
+			    	</div>
+			    </div>
+		    </div>
+		</div>
+	</div>
+	
+	<div id="deleteCommentModal" style="display:none;text-align:center;">
+		<h:form id="formDelete" style="text-align:center;">
+			<h:inputHidden id="idDelete" class="idDelete" value="#{CommentBean.id}"></h:inputHidden>
+			<h:commandButton class="uk-button uk-button-danger" action="#{CommentBean.deleteComment}" value="Sim"></h:commandButton> ou 
+			<h:outputLink class="uk-button uk-button-primary" onclick="alertify.closeAll();" value="#">Fechar</h:outputLink>
+		</h:form>
+	</div>
+	
+	
+	<h:outputScript  name="js/jquery-3.3.1.min.js" />
+	<h:outputScript  name="js/uikit.min.js" />
+	<h:outputScript  name="js/uikit-icons.min.js" />
+	<h:outputScript  name="js/alertify.min.js" />
+	<script>
+		var pesq = document.getElementsByClassName("content-box1");
+		if (window.matchMedia('(min-width: 640px)').matches){
+			UIkit.sticky(pesq[0],{offset: 20});
+		}
+		
+		if(!alertify.myAlert){
+			alertify.dialog('myAlert',function(){
+			return{
+				main:function(message){
+			        this.message = message;
+			      },
+			      setup:function(){
+			          return { 
+			            focus: { element:0 },
+		                options:{
+		                    maximizable:false,
+		                    resizable:true,
+		                    movable:false
+		                }
+			          };
+			      },
+			      prepare:function(){
+			        this.setContent(this.message);
+			      }
+			  }});
+			}
+		$('.removeButton').click(function(){
+			alertify.myAlert($('#deleteCommentModal').html()).resizeTo('40%','30%').setHeader('<h2>Deseja remover comentário?</h2>');
+		})
+			
+	</script>
+	
+</h:body>
+
+</html>

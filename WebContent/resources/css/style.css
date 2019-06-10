@@ -34,6 +34,11 @@ body {
 	min-height: 800px;
 	heigth:auto;
 }
+.content-boxPost {
+	background-color: white;
+	min-height: 800px;
+	heigth:auto;
+}
 .loginContentMargin {
 	width:100%;
 	padding-top:6%;
@@ -114,4 +119,46 @@ body {
 .avatar {
 	width:100%;
 	height:300px;
+}
+.postBanner {
+	width:100%;
+	height:400px;
+}
+.postContent {
+	padding:20px;
+}
+h1,h2,h3,h4,h5,h6 {
+	margin:0;
+}
+.postText {
+	text-indent:50px;
+	margin-top:15px;
+	text-align: justify;
+}
+.noLink {
+	color:black;
+}
+.noLink:hover {
+	color:black;
+	text-decoration:none;
+}
+.image-preview-edif {
+	background-image: url("#{resource['imgs/posts/8/7751-600x413.jpg']}");
+}
+.buttonFill {
+	width:100%;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.commentImage {
+	height:50px !important;
+}
+.comments,.comment {
+	margin:0 !important;
+	padding:0 !important;
+}
+.replyForm {
+	width:100% !important;
+	height:200px;
+	resize:none;
 }

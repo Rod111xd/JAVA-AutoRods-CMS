@@ -38,20 +38,34 @@ public class CommentControl {
 	
 	public ArrayList<Comment> listCommentsByPost(int idPost){
 		ArrayList<Comment> list=null;
+		ArrayList<Comment> replyList=null;
 		try {
 			Connection connect= new Conexao().abrirConexao();
-			String sql="SELECT * FROM Comment WHERE id_post=?";
+			String sql="SELECT * FROM Comment WHERE id_post=? ORDER BY -id_comment DESC";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setInt(1, idPost);
 			ResultSet rs= ps.executeQuery();
 			if(rs!=null) {
 				list = new ArrayList<Comment>();
+				replyList = new ArrayList<Comment>();
 				while(rs.next()) {
-					Comment comment= new Comment(rs.getInt("id"),rs.getString("content"),rs.getInt("id_post"),rs.getInt("id_comment"),rs.getInt("id_user"));
+					if(rs.getInt("id_comment")!=0) {
+						Comment rpl = new Comment(rs.getInt("id"),rs.getString("content"),rs.getInt("id_post"),rs.getInt("id_comment"),rs.getInt("id_user"),new UserControl().getUserName(rs.getInt("id_user")),new MediaControl().selectMediaByUser(rs.getInt("id_user")).getUrlMedia(),null);
+						replyList.add(rpl);
+						continue;
+					}
+					ArrayList<Comment> rplList = new ArrayList<Comment>();
+					for(Comment rp : replyList) {
+						if(rp.getIdComment()==rs.getInt("id")) {
+							rplList.add(rp);
+						}
+					}
+					Comment comment= new Comment(rs.getInt("id"),rs.getString("content"),rs.getInt("id_post"),rs.getInt("id_comment"),rs.getInt("id_user"),new UserControl().getUserName(rs.getInt("id_user")),new MediaControl().selectMediaByUser(rs.getInt("id_user")).getUrlMedia(),rplList);
 					list.add(comment);
 				}
-				new Conexao().fecharConexao(connect);
+				
 			}
+			new Conexao().fecharConexao(connect);
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
 		}catch(Exception e) {
@@ -95,11 +109,17 @@ public class CommentControl {
 		boolean result = false;
 		try {
 			Connection connect= new Conexao().abrirConexao();
-			String sql="DELETE FROM Comment WHERE id=?";
+			String sql="DELETE FROM Comment WHERE id_comment=?;";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setInt(1, id);
 			if(!ps.execute()) {
-				result=true;
+				sql="DELETE FROM Comment WHERE id=?;";
+				PreparedStatement ps2= connect.prepareStatement(sql);
+				ps2.setInt(1, id);
+				if(!ps2.execute()) {
+					result=true;
+				}
+				
 			}
 			new Conexao().fecharConexao(connect);
 		}catch(SQLException e) {

@@ -4,6 +4,8 @@ import model.Media;
 import model.User;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,11 +13,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
 
 import com.mysql.jdbc.Statement;
 
 import control.Conexao;
+import control.Crypt;
 
 public class UserControl {
 
@@ -26,7 +30,33 @@ public class UserControl {
 			String sql="INSERT INTO User(name,password, email) VALUES(?,?,?)";
 			PreparedStatement ps= connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, user.getName());
-			ps.setString(2, user.getPassword());
+			String key = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDL3zlyBF/j6AfR\r\n" + 
+					"9IwKAtZ6B5tq41b0L8dqm8FOycDNuHWGChg7CPNWrn44PVMsOQpy6SD532rqx/5A\r\n" + 
+					"M36ieylS+jrADwk9PW258qTMZPMyx1DEJG2PiGfs+mpMD03lycRuGmLEKQeInIS9\r\n" + 
+					"TClOmFFPeTnSkTeDkqX5y1A3TOH1FEXoGgKOpDWXZvGITlkl+kH4fwcoagLsIsek\r\n" + 
+					"yK88byCw6r4NLH22MeQD9LxEXuihe0HqaMTu8CPSeBljVdEjkmYx6pp4UAfuqnn8\r\n" + 
+					"zIuQFNUhuw1vJepj4pXIKsitoEXa918GuPetXjCtA1oAIzoUOF5tSpsPAoY44JJV\r\n" + 
+					"es13rVhfAgMBAAECggEADAci8f2dFKqbT4FAg9SwB6oMOs2n0ydAeiMvT/EqPVjd\r\n" + 
+					"IifVTyJTjPElhDbmAc1ptubXKbbLLYfYEbyYA4kFop4dujgI4QKPRzGwFFj+WigV\r\n" + 
+					"NUU664VuMDaD7/HVNDHns2E+I3mSNraZRDvKkhb9cRVjWm9z2YDc5vReSqzwBc/t\r\n" + 
+					"4SG7j2cBOicOd+dOZh7DfsMWORERpcdQjazQf1ArdXV2GwuBPRdz1BfgvrZmNj9o\r\n" + 
+					"6/WjVQV+MtMnX7HAmsw2s8jUCYO3lfx7I0/m/EIOFLfbuAgP4y+bVhDyKlQnQLOg\r\n" + 
+					"VrZmiYqB05JcqGsw51Df7sK8kKzBrTi+FOtANb7dpQKBgQDyPsQEBFe+tVKDUMGo\r\n" + 
+					"+LytXbheENbcq4t1C7c+ZmK7wzDwTdLOhdw8QcDyif3bm2NZcBNqZSYegWoFLn+2\r\n" + 
+					"H/SzntAIvAGzzE8Z86FeEKQu4PnfUuxpNa6oDaTdLgBBAJoRTD8wzsCMkwET8sGp\r\n" + 
+					"6ge6Whzz4r83NO8mz+q/R94bYwKBgQDXcqwe13Y78i7fkhs3vv2UxLbnUbAJKcjK\r\n" + 
+					"3l2JlxJmvamtZ1Ew0jRsXYzAYvCIS+/GFy4r2YzlBLEbd2bi7l/sgh50UNSpXaSx\r\n" + 
+					"uCARYZOm5Z70LxvhkMGmLXHPV1kzxa6Sy72XmYXhaBc/Ns4orbJ+sMeJOAbm72Po\r\n" + 
+					"4RNfuWvl1QKBgDsPRmbcUDA0sNtHExAJJKb31H1KibffMu7kXlaeS7APVJ0hvCWR\r\n" + 
+					"yTH/rfTz46po5f3mLzWfV33Ue26r+YMDo3svWvTmMVwOkbJ4DX2LfRvYydLCutSj\r\n" + 
+					"u+NJAErUbkdqyCUze6yAm70qEfc1FjZA0oWCdtCXFZt2EmBaDJd6BBKVAoGBAME0\r\n" + 
+					"iZvi1pmtdlFxwcy9DsShn/BS9g1RlkovHSys+IiAHzBszYd9iht/zSAd2dwwVOaM\r\n" + 
+					"lRAnuM0L5xNdgTuSTx1WFp9yeTMk0fO5zbAok/OASYpq0JL4cGBosn4gs9LUvNfR\r\n" + 
+					"s8TGnSPlZ6t9p2UdV0t7loS8ZJwmI6+MYAZgzpy9AoGBAIsrLcu8B0O0SWbtPH/C\r\n" + 
+					"jtq4YFt79/aSbCr6JtRQE6Yvs2RaqxcSe7coEugz9weMl3oOqVaYe5zIjUQBxdkh\r\n" + 
+					"+xulA5lcLblZMyMCplo3debzEZ+tIN736r5bmQjEzq+PeIyQgtleoXwjfpEHyQMD\r\n" + 
+					"eszFTW8/Jff2F4lVO/5J8xR6";
+			ps.setBytes(2, Crypt.encrypt(user.getPassword(), key));
 			ps.setString(3, user.getEmail());
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
@@ -119,22 +149,52 @@ public class UserControl {
 		User result= null;
 		try {
 			Connection connect = new Conexao().abrirConexao();
-			String sql="SELECT * FROM User WHERE email=? and password=?";
+			String sql="SELECT * FROM User WHERE email=?";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setString(1, user.getEmail());
-			ps.setString(2, user.getPassword());
 			ResultSet rs= ps.executeQuery();
 			List<String> preferences = new ArrayList<String>();
 			if(rs.next()){
-				String sql2="SELECT v.name from Vehicle_Type as v INNER JOIN Preferences as p ON v.id=p.id_vehicleType INNER JOIN User as u ON u.id=p.id_user WHERE u.id=?";
-				PreparedStatement ps2= connect.prepareStatement(sql2);
-				ps2.setInt(1, rs.getInt("id"));
-				ResultSet rs2= ps2.executeQuery();
-				while(rs2.next()) {
-					preferences.add(rs2.getString("name"));
+				String key = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDL3zlyBF/j6AfR\r\n" + 
+						"9IwKAtZ6B5tq41b0L8dqm8FOycDNuHWGChg7CPNWrn44PVMsOQpy6SD532rqx/5A\r\n" + 
+						"M36ieylS+jrADwk9PW258qTMZPMyx1DEJG2PiGfs+mpMD03lycRuGmLEKQeInIS9\r\n" + 
+						"TClOmFFPeTnSkTeDkqX5y1A3TOH1FEXoGgKOpDWXZvGITlkl+kH4fwcoagLsIsek\r\n" + 
+						"yK88byCw6r4NLH22MeQD9LxEXuihe0HqaMTu8CPSeBljVdEjkmYx6pp4UAfuqnn8\r\n" + 
+						"zIuQFNUhuw1vJepj4pXIKsitoEXa918GuPetXjCtA1oAIzoUOF5tSpsPAoY44JJV\r\n" + 
+						"es13rVhfAgMBAAECggEADAci8f2dFKqbT4FAg9SwB6oMOs2n0ydAeiMvT/EqPVjd\r\n" + 
+						"IifVTyJTjPElhDbmAc1ptubXKbbLLYfYEbyYA4kFop4dujgI4QKPRzGwFFj+WigV\r\n" + 
+						"NUU664VuMDaD7/HVNDHns2E+I3mSNraZRDvKkhb9cRVjWm9z2YDc5vReSqzwBc/t\r\n" + 
+						"4SG7j2cBOicOd+dOZh7DfsMWORERpcdQjazQf1ArdXV2GwuBPRdz1BfgvrZmNj9o\r\n" + 
+						"6/WjVQV+MtMnX7HAmsw2s8jUCYO3lfx7I0/m/EIOFLfbuAgP4y+bVhDyKlQnQLOg\r\n" + 
+						"VrZmiYqB05JcqGsw51Df7sK8kKzBrTi+FOtANb7dpQKBgQDyPsQEBFe+tVKDUMGo\r\n" + 
+						"+LytXbheENbcq4t1C7c+ZmK7wzDwTdLOhdw8QcDyif3bm2NZcBNqZSYegWoFLn+2\r\n" + 
+						"H/SzntAIvAGzzE8Z86FeEKQu4PnfUuxpNa6oDaTdLgBBAJoRTD8wzsCMkwET8sGp\r\n" + 
+						"6ge6Whzz4r83NO8mz+q/R94bYwKBgQDXcqwe13Y78i7fkhs3vv2UxLbnUbAJKcjK\r\n" + 
+						"3l2JlxJmvamtZ1Ew0jRsXYzAYvCIS+/GFy4r2YzlBLEbd2bi7l/sgh50UNSpXaSx\r\n" + 
+						"uCARYZOm5Z70LxvhkMGmLXHPV1kzxa6Sy72XmYXhaBc/Ns4orbJ+sMeJOAbm72Po\r\n" + 
+						"4RNfuWvl1QKBgDsPRmbcUDA0sNtHExAJJKb31H1KibffMu7kXlaeS7APVJ0hvCWR\r\n" + 
+						"yTH/rfTz46po5f3mLzWfV33Ue26r+YMDo3svWvTmMVwOkbJ4DX2LfRvYydLCutSj\r\n" + 
+						"u+NJAErUbkdqyCUze6yAm70qEfc1FjZA0oWCdtCXFZt2EmBaDJd6BBKVAoGBAME0\r\n" + 
+						"iZvi1pmtdlFxwcy9DsShn/BS9g1RlkovHSys+IiAHzBszYd9iht/zSAd2dwwVOaM\r\n" + 
+						"lRAnuM0L5xNdgTuSTx1WFp9yeTMk0fO5zbAok/OASYpq0JL4cGBosn4gs9LUvNfR\r\n" + 
+						"s8TGnSPlZ6t9p2UdV0t7loS8ZJwmI6+MYAZgzpy9AoGBAIsrLcu8B0O0SWbtPH/C\r\n" + 
+						"jtq4YFt79/aSbCr6JtRQE6Yvs2RaqxcSe7coEugz9weMl3oOqVaYe5zIjUQBxdkh\r\n" + 
+						"+xulA5lcLblZMyMCplo3debzEZ+tIN736r5bmQjEzq+PeIyQgtleoXwjfpEHyQMD\r\n" + 
+						"eszFTW8/Jff2F4lVO/5J8xR6";
+				String bdPwd = Crypt.decrypt(rs.getBytes("password"), key);
+				System.out.println(bdPwd);
+				if(bdPwd.equals(user.getPassword())) {
+					String sql2="SELECT v.name from Vehicle_Type as v INNER JOIN Preferences as p ON v.id=p.id_vehicleType INNER JOIN User as u ON u.id=p.id_user WHERE u.id=?";
+					PreparedStatement ps2= connect.prepareStatement(sql2);
+					ps2.setInt(1, rs.getInt("id"));
+					ResultSet rs2= ps2.executeQuery();
+					while(rs2.next()) {
+						preferences.add(rs2.getString("name"));
+					}
+					Media userMedia = new MediaControl().selectMediaByUser(rs.getInt("id"));
+					result = new User(rs.getInt("id"),rs.getString("name"),rs.getString("password"),rs.getString("email"),preferences,userMedia.getUrlMedia());
 				}
-				Media userMedia = new MediaControl().selectMediaByUser(rs.getInt("id"));
-				result = new User(rs.getInt("id"),rs.getString("name"),rs.getString("password"),rs.getString("email"),preferences,userMedia.getUrlMedia());
+				
 			}
 			new Conexao().fecharConexao(connect);
 		}catch(Exception e) {
@@ -142,4 +202,23 @@ public class UserControl {
 		}
 		return result;
 	}
+	
+	public String getUserName(int id) {
+		String result= null;
+		try {
+			Connection connect = new Conexao().abrirConexao();
+			String sql="SELECT * FROM User WHERE id=?";
+			PreparedStatement ps= connect.prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs= ps.executeQuery();
+			if(rs.next()){
+				result = rs.getString("name");
+			}
+			new Conexao().fecharConexao(connect);
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return result;
+	}
+	
 }
