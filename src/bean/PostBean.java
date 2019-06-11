@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
 
 import control.AdminControl;
+import control.CommentControl;
 import control.MediaControl;
 import control.PostControl;
 import model.Admin;
@@ -198,7 +199,16 @@ public class PostBean {
 	
 	public void delete(int id) throws IOException {
 		new MediaControl().deleteMedia(id);
+		new CommentControl().deleteCommentsByPost(id);
 		new PostControl().deletePost(id);
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
+	}
+	
+	public void deletePost() throws IOException {
+		new MediaControl().deleteMedia(this.id);
+		new CommentControl().deleteCommentsByPost(this.id);
+		new PostControl().deletePost(this.id);
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 	}
@@ -212,6 +222,12 @@ public class PostBean {
 			postList = new PostControl().listPostsSearchTitle(pesquisa);
 			System.out.println("pesquisa preenchida");
 		}
+		this.setLista(postList);
+	}
+	
+	public void searchCategory(String cat) {
+		ArrayList<Post> postList = null;
+		postList = new PostControl().listPostsSearchCategory(cat);
 		this.setLista(postList);
 	}
 	

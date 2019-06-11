@@ -57,6 +57,7 @@ public class PostControl {
 	}
 	
 	public ArrayList<Post> listPosts(){
+		System.out.println("gfdhdfhdh");
 		ArrayList<Post> list=null;
 		try {
 			Connection connect= new Conexao().abrirConexao();
@@ -89,6 +90,30 @@ public class PostControl {
 			String sql="SELECT * FROM Post WHERE title LIKE ? ORDER BY date DESC";
 			PreparedStatement ps= connect.prepareStatement(sql);
 			ps.setString(1, "%"+title+"%");
+			ResultSet rs= ps.executeQuery();
+			if(rs!=null) {
+				list = new ArrayList<Post>();
+				while(rs.next()) {
+					Media md = new MediaControl().selectMediaByPost(rs.getInt("id"));
+					Post post= new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),translateType(rs.getString("type")),translateCategory(rs.getString("category")),rs.getString("date"),rs.getInt("views"),rs.getInt("id_admin"),md.getUrlMedia());
+					list.add(post);
+				}
+				
+			}
+			new Conexao().fecharConexao(connect);
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return list;
+	}
+	
+	public ArrayList<Post> listPostsSearchCategory(String cat){
+		ArrayList<Post> list=null;
+		try {
+			Connection connect= new Conexao().abrirConexao();
+			String sql="SELECT * FROM Post WHERE category=? ORDER BY date DESC";
+			PreparedStatement ps= connect.prepareStatement(sql);
+			ps.setString(1, cat);
 			ResultSet rs= ps.executeQuery();
 			if(rs!=null) {
 				list = new ArrayList<Post>();

@@ -77,6 +77,11 @@
 							<h:inputText id="pesquisa" name="pesquisa" value="#{pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
 							<h:commandButton value="Pesquisar" class="uk-button uk-button-secondary"/>
 					    </h:form>
+					    <h:panelGroup rendered="#{AdminLogin.logged}">
+					    	<hr class="uk-divider-icon"/>
+					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Criar publicação</h:outputLink>
+					    </h:panelGroup>
+					    
 				    </div>
 			    </div>
 		    </div>
@@ -116,8 +121,13 @@
 								                #{comment.content}
 								            </div>
 							            	<div class="actions">
-								                <a onclick="document.getElementById('formReply:idReply').value=#{comment.id};$('.divFormReply').show();"  class="reply">Responder</a>
-								                <a onclick="document.getElementById('formDelete:idDelete').value=#{comment.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+							            		<h:panelGroup rendered="#{UserLogin.logged}">
+								                	<a onclick="document.getElementById('formReply:idReply').value=#{comment.id};$('#formReplyLabel').html('Em resposta à #{comment.userName}');$('.divFormReply').show();"  class="reply">Responder</a>
+								                </h:panelGroup>
+								                <h:panelGroup rendered="#{UserLogin.id eq comment.idUser}">
+								                	<a onclick="document.getElementById('formDelete:idDelete').value=#{comment.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+								                </h:panelGroup>
+								                
 								            </div>
 								            
 								            <ui:repeat var="reply" value="#{comment.listComments}">
@@ -132,7 +142,9 @@
 										                        #{reply.content}
 										                    </div>
 										                    <div class="actions">
-												                <a onclick="document.getElementById('formDelete:idDelete').value=#{reply.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+											                    <h:panelGroup rendered="#{UserLogin.id eq comment.idUser}">
+													                <a onclick="document.getElementById('formDelete:idDelete').value=#{reply.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
+													            </h:panelGroup>
 												            </div>
 										                </div>
 										            </div>
@@ -142,12 +154,13 @@
 								    </div>
 						    	</ui:repeat>
 						    	<div  class="divFormReply" style="display:none">
-				                    	<h:form id="formReply">
-									            <h:inputTextarea value="#{CommentBean.content}" class="uk-textarea replyForm"></h:inputTextarea><br/>
-									            <h:inputHidden id="idReply" class="idReply" value="#{CommentBean.id}"></h:inputHidden>
-												<h:commandButton class="uk-button uk-button-secondary" action="#{CommentBean.addReply(UserLogin.id,PostBean.id)}" value="Responder"/>
-												<span class="uk-button uk-button-primary" onclick="$('.divFormReply').hide()">Fechar</span>
-									    </h:form>
+						    		<div id="formReplyLabel"></div>	
+			                    	<h:form id="formReply">
+								            <h:inputTextarea value="#{CommentBean.content}" class="uk-textarea replyForm"></h:inputTextarea><br/>
+								            <h:inputHidden id="idReply" class="idReply" value="#{CommentBean.id}"></h:inputHidden>
+											<h:commandButton class="uk-button uk-button-secondary" action="#{CommentBean.addReply(UserLogin.id,PostBean.id)}" value="Responder"/>
+											<span class="uk-button uk-button-primary" onclick="$('.divFormReply').hide()">Fechar</span>
+								    </h:form>
 			                    </div>
 						    	<h:panelGroup rendered="#{UserLogin.logged}">
 						    		<h:form>

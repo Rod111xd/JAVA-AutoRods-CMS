@@ -2,8 +2,13 @@ package bean;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
 import model.User;
 import control.UserControl;
+
+import java.io.IOException;
 import java.util.List;
 @ManagedBean(name="UserLogin")
 @SessionScoped
@@ -59,9 +64,11 @@ public class UserLogin{
 		this.avatar = avatar;
 	}
 	
-	public String login() {
+	public void login() throws IOException {
 		User user = new User(this.getId(),this.getName(), this.getPassword(),this.getEmail(),this.getPreferences(),this.getAvatar());
 		User newUser = new UserControl().login(user);
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        
 		if(newUser!=null) {
 			System.out.println("deu certo");
 			this.id = newUser.getId();
@@ -69,10 +76,10 @@ public class UserLogin{
 			this.preferences = newUser.getPreferences();
 			this.avatar = newUser.getAvatar();
 			this.logged = true;
-			return "index";
+			ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 		}else {
 			System.out.println("deu errado");
-			return "login";
+			ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
 		}
 			
 	}

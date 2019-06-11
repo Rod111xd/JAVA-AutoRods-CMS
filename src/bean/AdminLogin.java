@@ -1,7 +1,12 @@
 package bean;
 
+import java.io.IOException;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
 import model.Admin;
 import control.AdminControl;
 
@@ -38,17 +43,18 @@ public class AdminLogin {
 		this.logged = isLogged;
 	}
 	
-	public String login() {
+	public void login() throws IOException {
 		Admin admin = new Admin(this.getId(),this.getName(), this.getPassword());
 		Admin newAdmin = new AdminControl().login(admin);
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 		if(newAdmin!=null) {
 			System.out.println("deu certo");
 			this.setId(newAdmin.getId());
 			this.logged = true;
-			return "index";
+			ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 		}else {
 			System.out.println("deu errado");
-			return "login";
+			ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
 		}
 			
 	}

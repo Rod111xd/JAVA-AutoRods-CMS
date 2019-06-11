@@ -84,16 +84,29 @@
 								</h:form>
 							</h:panelGroup>
 					    </h:form>
+					    <h:panelGroup rendered="#{not AdminLogin.logged}">
+					    	<h:form >
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('car')}" value="Carros"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('motocicle')}" value="Motos"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('bus')}" value="Ônibus"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('truck')}" value="Caminhões"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('airplane')}" value="Aviões"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('helicopter')}" value="Helicópteros"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('boat')}" value="Barcos"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('ship')}" value="Navios"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+				        	</h:form>
+					    </h:panelGroup>
 					    <h:panelGroup rendered="#{AdminLogin.logged}">
 					    	<hr class="uk-divider-icon"/>
 					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Criar publicação</h:outputLink>
-					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Minhas publicações</h:outputLink>
 					    </h:panelGroup>
 				    </div>
 			    </div>
 		    </div>
 		    <div class="uk-width-2-3@s uk-width-2-3@l">
 			    <div class="content-box2">
+			    	
+			    	
 			    	<h:panelGroup id="postsRepeat">
 				    	<div class="uk-grid contentGrid" uk-grid="">
 				    		<h:panelGrid rendered="#{empty PostBean.list}">
@@ -107,16 +120,12 @@
 												<h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
 												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 5%" value="#">#{post.category}</h:outputLink>
 												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 13%" value="#">#{post.type}</h:outputLink>
-												<h:panelGroup class="uk-position-absolute uk-transform-center" rendered="#{AdminLogin.logged}" style="left: 90%; top: 8%">
+												<h:panelGroup class="uk-position-absolute uk-transform-center" rendered="#{AdminLogin.id eq post.idAdmin}" style="left: 90%; top: 8%">
 								                	<div class="uk-inline">
 												    	<span class="uk-icon-button" uk-icon="icon: cog;ratio:1.6"></span>
 													    <div uk-dropdown="mode: click">
-													    	<h:form>
-										                		<h3><h:commandLink action="#{PostBean.delete(post.id)}" value=" X "/></h3>
-										                	</h:form>
-										                	<h:form>
+													    		<a onclick="document.getElementById('formDelete:idDelete').value=#{post.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a><br/>
 										                		<h:outputLink value="editPost.xhtml?id=#{post.id}"><span class="uk-icon" uk-icon="icon:pencil"></span></h:outputLink>
-										                	</h:form>
 													    </div>
 													</div>
 								                </h:panelGroup>
@@ -141,7 +150,13 @@
 		</div>
 	</div>
 	
-	
+	<div id="deletePostModal" style="display:none;text-align:center;">
+		<h:form id="formDelete" style="text-align:center;">
+			<h:inputHidden id="idDelete" class="idDelete" value="#{PostBean.id}"></h:inputHidden>
+			<h:commandButton class="uk-button uk-button-danger" action="#{PostBean.deletePost}" value="Sim"></h:commandButton> ou 
+			<h:outputLink class="uk-button uk-button-primary" onclick="alertify.closeAll();" value="#">Fechar</h:outputLink>
+		</h:form>
+	</div>
 	
 	
 	<h:outputScript  name="js/jquery-3.3.1.min.js" />
@@ -153,6 +168,32 @@
 		if (window.matchMedia('(min-width: 640px)').matches){
 			UIkit.sticky(pesq[0],{offset: 20});
 		}
+		
+		if(!alertify.myAlert){
+			alertify.dialog('myAlert',function(){
+			return{
+				main:function(message){
+			        this.message = message;
+			      },
+			      setup:function(){
+			          return { 
+			            focus: { element:0 },
+		                options:{
+		                    maximizable:false,
+		                    resizable:true,
+		                    movable:false
+		                }
+			          };
+			      },
+			      prepare:function(){
+			        this.setContent(this.message);
+			      }
+			  }});
+			}
+		$('.removeButton').click(function(){
+			alertify.myAlert($('#deletePostModal').html()).resizeTo('40%','30%').setHeader('<h2>Deseja remover publicação?</h2>');
+		})
+
 		
 	</script>
 	

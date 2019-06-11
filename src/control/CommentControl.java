@@ -130,4 +130,29 @@ public class CommentControl {
 		return result;
 	}
 	
+	public boolean deleteCommentsByPost(int id) {
+		boolean result = false;
+		try {
+			Connection connect= new Conexao().abrirConexao();
+			String sql="DELETE FROM Comment WHERE id_comment is not null and id_post=?;";
+			PreparedStatement ps= connect.prepareStatement(sql);
+			ps.setInt(1, id);
+			if(!ps.execute()) {
+				sql="DELETE FROM Comment WHERE id_post=?;";
+				PreparedStatement ps2= connect.prepareStatement(sql);
+				ps2.setInt(1, id);
+				if(!ps2.execute()) {
+					result=true;
+				}
+				
+			}
+			new Conexao().fecharConexao(connect);
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		return result;
+	}
+	
 }
