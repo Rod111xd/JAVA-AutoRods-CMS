@@ -5,6 +5,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
@@ -12,6 +13,7 @@
 	<h:outputStylesheet  name="css/uikit.min.css" />
 	<h:outputStylesheet  name="css/alertify.min.css" />
 	<h:outputStylesheet  name="css/style.css" />
+	<link rel="icon" type="image/png" href="#{resource['imgs/favicon.png']}"/>
 	<title>Entrar/Registrar</title>
 </h:head>
 
@@ -27,7 +29,7 @@
 			    
 				</div>
 			    <div class="uk-width-1-3@s uk-width-1-3@l descContent">
-			    
+			    	<h:messages style="color:red" layout="table" />
 			    </div>
 			</div>
 			
@@ -41,8 +43,9 @@
 	<h:outputScript  name="js/uikit-icons.min.js" />
 	<h:outputScript  name="js/alertify.min.js" />
 	<h:outputScript  name="js/javinha.js" />
-	<script>
-		mudarFormulario('login');
-	</script>
+	<h:outputText rendered="#{not empty UserLogin.toForm or (empty UserBean.toForm and empty AdminLogin.toForm)}" escape="false" value="#{UserLogin.toForm}"></h:outputText>
+	<h:outputText rendered="#{not empty AdminLogin.toForm}" escape="false" value="#{AdminLogin.toForm}"></h:outputText>
+	<h:outputText rendered="#{not empty UserBean.toForm}" escape="false" value="#{UserBean.toForm}"></h:outputText>
+	
 </h:body>
 </html>

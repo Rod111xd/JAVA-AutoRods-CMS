@@ -5,13 +5,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 
 import control.CommentControl;
 import control.PostControl;
 import model.Comment;
 import model.Post;
+
+/**
+* Bean para questões relacionadas à comentários.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package bean
+*/
 
 @ManagedBean(name="CommentBean")
 @ViewScoped
@@ -64,38 +73,63 @@ public class CommentBean {
 		this.setList(new CommentControl().listCommentsByPost(idPost));
 	}
 	
-	public String addComment(int idUser,int idPost) throws IOException {
-		if(true) {
+	/**
+	* Método para adição de comentários.
+	* @param int idUser Vai indicar qual usuário realizou o comentário
+	* @param int idPost Vai indicar qual post foi comentado
+	* @return String
+	*/
+	public void addComment(int idUser,int idPost) throws IOException {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		if(this.getContent()!=null && this.getContent()!="") {
 			Comment comment = new Comment(0,this.getContent(),idPost,0,idUser,null,null,null);
 			
 			if(new CommentControl().addComment(comment)) {
-				return "index";
+				ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 			}else {
-				return "addComment";
+				ctx.addMessage("addCommentError", new FacesMessage("Seu comentário não deu certo!"));
+				ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 			}
 			
 		}else {
-			return "addComment";
+			ctx.addMessage("addCommentError", new FacesMessage("Seu comentário não deu certo!"));
+			ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 		}
 	}
 	
-	public String addReply(int idUser,int idPost) {
-		System.out.println(this.id);
-		if(true) {
+	
+	/**
+	* Método para adição de respostas.
+	* @param int idUser Vai indicar qual usuário realizou a resposta
+	* @param int idPost Vai indicar qual post cujo comentário foi respondido
+	* @return String
+	*/
+	public void addReply(int idUser,int idPost) throws IOException {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		if(this.getContent()!=null && this.getContent()!="") {
 			Comment comment = new Comment(0,this.getContent(),idPost,this.id,idUser,null,null,null);
 			if(new CommentControl().addComment(comment)) {
-				return "index";
+				ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 			}else {
-				return "addComment";
+				ctx.addMessage("addReplyError", new FacesMessage("Sua resposta não deu certo!"));
+				ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 			}
 			
 		}else {
-			return "addComment";
+			ctx.addMessage("addReplyError", new FacesMessage("Sua resposta não deu certo!"));
+			ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 		}
 	}
 	
-	public void deleteComment() {
+	/**
+	* Método para remoção de comentários.
+	*/
+	public void deleteComment(int idPost) throws IOException {
 		new CommentControl().deleteComment(this.id);
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		ec.redirect(ec.getRequestContextPath() + "/" + "content.xhtml?id="+idPost);
 	}
 	
 }

@@ -14,6 +14,7 @@
 	<h:outputStylesheet  name="css/alertify.min.css" />
 	<h:outputStylesheet  name="css/comment.min.css" />
 	<h:outputStylesheet  name="css/style.css" />
+	<link rel="icon" type="image/png" href="#{resource['imgs/favicon.png']}"/>
 	<title>AutoRods</title>
 </h:head>
 
@@ -30,7 +31,7 @@
 		        <ul class="uk-navbar-nav">
 		            <li class="uk-active"><h:outputLink value="index.xhtml"><span class="uk-icon" uk-icon="icon:home"></span> Início</h:outputLink></li>
 		            <h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
-						<li class="uk-active"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
+						<li class="uk-active uk-visible@m"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
 					</h:panelGroup>
 		        </ul>
 		
@@ -59,6 +60,11 @@
 		<div class="uk-grid contentGrid" uk-grid="">
 		    <div class="uk-width-1-3@s uk-width-1-3@l">
 			    <div class="content-box1">
+			    	<h:panelGroup rendered="#{not UserLogin.logged and not AdminLogin.logged}">
+			    		<div class="noLoginDetails">
+			    			<h:outputLink value="login.xhtml">Você não está logado. Clique aqui para entrar ou criar uma conta.</h:outputLink>
+			    		</div>
+			    	</h:panelGroup>
 			    	<h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
 						<div class="adminDetails">
 				    		<h:outputText value="#{AdminLogin.name}"/>
@@ -67,16 +73,12 @@
 					<h:panelGroup layout="block" rendered="#{UserLogin.logged}">
 						<div class="userDetails">
 				    		<h:outputText value="#{UserLogin.name}"/>
-				    		<h:outputText rendered="#{not empty UserLogin.preferences}" value="#{UserLogin.preferences}"/>
-				    		<h:graphicImage  name="#{UserLogin.avatar}" class="cardImage"/>
+				    		<h:graphicImage  name="#{UserLogin.avatar}" class="userImage"/>
 				    	</div>
 					</h:panelGroup>
 				    <div class="lateral-menu">
-				    	<h:form>
-				    		<h:outputLabel class="uk-form-label">PESQUISA</h:outputLabel>
-							<h:inputText id="pesquisa" name="pesquisa" value="#{pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
-							<h:commandButton value="Pesquisar" class="uk-button uk-button-secondary"/>
-					    </h:form>
+				    	<hr class="uk-divider-icon"/>
+				    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="index.xhtml">Página Inicial</h:outputLink>
 					    <h:panelGroup rendered="#{AdminLogin.logged}">
 					    	<hr class="uk-divider-icon"/>
 					    	<h:outputLink class="uk-button uk-button-primary buttonFill" value="addPost.xhtml">Criar publicação</h:outputLink>
@@ -87,7 +89,15 @@
 		    </div>
 		    <div class="uk-width-2-3@s uk-width-2-3@l">
 			    <div class="content-boxPost">
-			    	<h:graphicImage  name='#{PostBean.urlMedia}' class='postBanner'/>
+			    	<h:panelGroup rendered="#{PostBean.mediaType(PostBean.urlMedia) eq 'video'}">
+						<video class="cardVideo" controls="">
+						  	<source src="#{resource[PostBean.urlMedia]}" type="#{PostBean.getVideoType(PostBean.urlMedia)}"/>
+							Parceiro, teu browser não ta suportando não..
+						</video>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{PostBean.mediaType(PostBean.urlMedia) eq 'image'}">
+						<h:graphicImage  name='#{PostBean.urlMedia}' class='postBanner'/>
+					</h:panelGroup>
 			    	<div class="postContent">
 			    		<h:outputLink class="uk-button uk-button-primary" value="index.xhtml">Voltar</h:outputLink>
 			    		<h1 class="uk-header">#{PostBean.title}</h1>
@@ -97,7 +107,7 @@
 			    		<h4><span class="uk-icon" uk-icon="icon: bookmark"></span> #{PostBean.type}</h4>
 			    		<h4><span class="uk-icon" uk-icon="icon: tag"></span> #{PostBean.category}</h4>
 			    		<h4><span class="uk-icon" uk-icon="icon: world"></span> #{PostBean.views} visualização(s)</h4>
-			    		<h:panelGrid layout="block" rendered="#{AdminLogin.logged}">
+			    		<h:panelGrid layout="block" rendered="#{AdminLogin.id eq PostBean.idAdmin}">
 			    			<h:form>
 		                		<h:commandLink action="#{PostBean.delete(PostBean.id)}" value="Remover"/>
 		                	</h:form>
@@ -142,7 +152,7 @@
 										                        #{reply.content}
 										                    </div>
 										                    <div class="actions">
-											                    <h:panelGroup rendered="#{UserLogin.id eq comment.idUser}">
+											                    <h:panelGroup rendered="#{UserLogin.id eq reply.idUser}">
 													                <a onclick="document.getElementById('formDelete:idDelete').value=#{reply.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a>
 													            </h:panelGroup>
 												            </div>
@@ -153,6 +163,7 @@
 								        </div>
 								    </div>
 						    	</ui:repeat>
+						    	<h:messages style="color:red" layout="table" />
 						    	<div  class="divFormReply" style="display:none">
 						    		<div id="formReplyLabel"></div>	
 			                    	<h:form id="formReply">
@@ -180,7 +191,7 @@
 	<div id="deleteCommentModal" style="display:none;text-align:center;">
 		<h:form id="formDelete" style="text-align:center;">
 			<h:inputHidden id="idDelete" class="idDelete" value="#{CommentBean.id}"></h:inputHidden>
-			<h:commandButton class="uk-button uk-button-danger" action="#{CommentBean.deleteComment}" value="Sim"></h:commandButton> ou 
+			<h:commandButton class="uk-button uk-button-danger" action="#{CommentBean.deleteComment(PostBean.id)}" value="Sim"></h:commandButton> ou 
 			<h:outputLink class="uk-button uk-button-primary" onclick="alertify.closeAll();" value="#">Fechar</h:outputLink>
 		</h:form>
 	</div>
@@ -190,10 +201,10 @@
 	<h:outputScript  name="js/uikit.min.js" />
 	<h:outputScript  name="js/uikit-icons.min.js" />
 	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/jquery.sticky-kit.min.js" />
 	<script>
-		var pesq = document.getElementsByClassName("content-box1");
 		if (window.matchMedia('(min-width: 640px)').matches){
-			UIkit.sticky(pesq[0],{offset: 20});
+			$(".content-box1").stick_in_parent();
 		}
 		
 		if(!alertify.myAlert){
@@ -218,7 +229,7 @@
 			  }});
 			}
 		$('.removeButton').click(function(){
-			alertify.myAlert($('#deleteCommentModal').html()).resizeTo('40%','30%').setHeader('<h2>Deseja remover comentário?</h2>');
+			alertify.myAlert($('#deleteCommentModal').html()).resizeTo('40%','35%').setHeader('<h2>Remover comentário?</h2>');
 		})
 			
 	</script>

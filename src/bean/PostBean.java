@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -19,10 +20,16 @@ import control.PostControl;
 import model.Admin;
 import model.Post;
 
+/**
+* Bean para questões relacionadas à publicações.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package bean
+*/
+
 @ManagedBean(name="PostBean")
 @ViewScoped
 public class PostBean {
-	private ArrayList<Post> list = new PostControl().listPosts();
+	private ArrayList<ArrayList<Post>> list = this.sliceArray(new PostControl().listPosts());
 	private int id;
 	private String title;
 	private String subtitle;
@@ -36,6 +43,7 @@ public class PostBean {
 	private Part arquivo;
 	private String adminName;
 	private String pesquisa;
+	private boolean recommendation = false;
 	
 	public int getId() {
 		return id;
@@ -91,10 +99,11 @@ public class PostBean {
 	public void setUrlMedia(String urlMedia) {
 		this.urlMedia = urlMedia;
 	}
-	public ArrayList<Post> getList() {
+	
+	public ArrayList<ArrayList<Post>> getList() {
 		return list;
 	}
-	public void setLista(ArrayList<Post> list) {
+	public void setLista(ArrayList<ArrayList<Post>> list) {
 		this.list = list;
 	}
 	public Part getArquivo() {
@@ -121,9 +130,21 @@ public class PostBean {
 	public void setPesquisa(String pesquisa) {
 		this.pesquisa = pesquisa;
 	}
+	public boolean isRecommendation() {
+		return recommendation;
+	}
+	public void setRecommendation(boolean recommendation) {
+		this.recommendation = recommendation;
+	}
 	
+	
+	/**
+	* Método para adição de publicações.
+	* @param int idAdm Vai indicar qual admin criou a publicação
+	* @return String
+	*/
 	public String addPost(int idAdm) throws IOException {
-		if(true) {
+		if(arquivo!=null && (arquivo.getContentType().endsWith("png") || arquivo.getContentType().endsWith("jpg") || arquivo.getContentType().endsWith("jpeg") || arquivo.getContentType().endsWith("mp4") || arquivo.getContentType().endsWith("wmv") || arquivo.getContentType().endsWith("mpg") || arquivo.getContentType().endsWith("avi"))) {
 			System.out.println(this.getIdAdmin());
 			Date dAtual = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -142,6 +163,11 @@ public class PostBean {
 		}
 	}
 	
+	/**
+	* Método para resgatar o nome do arquivo .
+	* @param Part part Representa o arquivo em sí
+	* @return String
+	*/
 	public String getFilename(Part part) {
 		for(String cd : part.getHeader("content-disposition").split(";")) {
 			if(cd.trim().startsWith("filename")) {
@@ -152,6 +178,10 @@ public class PostBean {
 		return null;
 	}
 	
+	/**
+	* Método para carregamento de uma determinada publicação.
+	* @param int id Vai indicar qual publicação deve ser resgatada
+	*/
 	public void loadId(int id) throws IOException, ParseException {
 		Post post = new PostControl().selectPost(id);
 		if(post!=null) {
@@ -177,8 +207,14 @@ public class PostBean {
 		}
 	}
 	
+	/**
+	* Método para edição de publicações.
+	* @param int id Vai indicar qual post será editado
+	* @param int idAdm Vai indicar qual admin editará
+	* @return String
+	*/
 	public String editPost(int id,int idAdm) {
-		if(true) {
+		if(arquivo!=null && (arquivo.getContentType().endsWith("png") || arquivo.getContentType().endsWith("jpg") || arquivo.getContentType().endsWith("jpeg") || arquivo.getContentType().endsWith("mp4") || arquivo.getContentType().endsWith("wmv") || arquivo.getContentType().endsWith("mpg") || arquivo.getContentType().endsWith("avi"))) {
 			System.out.println(this.getIdAdmin());
 			Date dAtual = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -186,17 +222,22 @@ public class PostBean {
 			this.setDate(dataAtual);
 			Post post = new Post(this.getId(),this.getTitle(), this.getSubtitle(),this.getText(),this.getType(),this.getCategory(),this.getDate(),0,idAdm,null);
 			
-			if(new PostControl().editPost(post,arquivo,getFilename(arquivo))) {
+			if(new PostControl().editPost(post,arquivo,getFilename(arquivo),this.urlMedia)) {
 				return "index";
 			}else {
-				return "addPost";
+				return null;
 			}
 			
 		}else {
-			return "addPost";
+			return null;
 		}
 	}
 	
+	
+	/**
+	* Método para remoção de publicações.
+	* @param int idr Vai indicar qual publicação será removida
+	*/
 	public void delete(int id) throws IOException {
 		new MediaControl().deleteMedia(id);
 		new CommentControl().deleteCommentsByPost(id);
@@ -205,6 +246,9 @@ public class PostBean {
         ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 	}
 	
+	/**
+	* Método para remoção de comentários sem parâmetros.
+	*/
 	public void deletePost() throws IOException {
 		new MediaControl().deleteMedia(this.id);
 		new CommentControl().deleteCommentsByPost(this.id);
@@ -213,7 +257,17 @@ public class PostBean {
         ec.redirect(ec.getRequestContextPath() + "/index.xhtml");
 	}
 	
+	/**
+	* Método para seleção de publicações a partir da pesquisa.
+	*/
 	public void searchTitle() {
+		this.setCategory("");
+		this.setRecommendation(false);
+		try {
+			Thread.sleep(200);
+		}catch(InterruptedException e) {
+			e.getMessage();
+		}
 		ArrayList<Post> postList = null;
 		if(pesquisa==null) {
 			postList = new PostControl().listPosts();
@@ -222,18 +276,114 @@ public class PostBean {
 			postList = new PostControl().listPostsSearchTitle(pesquisa);
 			System.out.println("pesquisa preenchida");
 		}
-		this.setLista(postList);
+		this.setLista(sliceArray(postList));
 	}
 	
+	
+	/**
+	* Método para seleção de publicações a partir da categoria.
+	* @param String cat Vai indicar qual categoria será criterizada
+	*/
 	public void searchCategory(String cat) {
+		this.setPesquisa("");
+		this.setRecommendation(false);
+		try {
+			Thread.sleep(200);
+		}catch(InterruptedException e) {
+			e.getMessage();
+		}
+		this.setCategory(new PostControl().translateCategory(cat));
 		ArrayList<Post> postList = null;
 		postList = new PostControl().listPostsSearchCategory(cat);
-		this.setLista(postList);
+		this.setLista(sliceArray(postList));
 	}
 	
+	/**
+	* Método para seleção de publicações a partir da recomendação do usuário.
+	* @param List<String> pref Vai indicar as preferências do usuário
+	*/
+	public void searchRecommendation(List<String> pref) {
+		this.setPesquisa("");
+		this.setCategory("");
+		this.setRecommendation(true);
+		try {
+			Thread.sleep(200);
+		}catch(InterruptedException e) {
+			e.getMessage();
+		}
+		ArrayList<Post> postList = null;
+		postList = new PostControl().listPostsByRecommendation(pref);
+		System.out.println("ó o tamanho: "+postList.size());
+		this.setLista(sliceArray(postList));
+	}
+	
+	public ArrayList<ArrayList<Post>> sliceArray(ArrayList<Post> lst) {
+		System.out.println(lst.size());
+		ArrayList<ArrayList<Post>> arraySliced = new ArrayList<ArrayList<Post>>();
+		ArrayList<Post> arPst = new ArrayList<Post>();
+		int i=1;
+		for(Post item :lst) {
+			arPst.add(item);
+			if(i==lst.size()) {
+				System.out.println("doinho1");
+				arraySliced.add(arPst);
+				break;
+			}else if(i%10==0) {
+				System.out.println("doinho2");
+				arraySliced.add(arPst);
+				arPst = new ArrayList<Post>();
+			}
+			i=i+1;
+		}
+		
+		this.setLista(arraySliced);
+		return arraySliced;
+	}
+	
+	/**
+	* Método para limpar a pesquisa.
+	*/
 	public void cleanSearch() {
 		this.setPesquisa("");
+		this.setCategory("");
+		this.setRecommendation(false);
 		searchTitle();
 	}
 	
+	public int sumIndex(int ind) {
+		return ind+1;
+	}
+	
+	/**
+	* Método para saber se é video ou imagem.
+	* @param String urlMd Vai indicar a url da mídia
+	* @return String
+	*/
+	public String mediaType(String urlMd) {
+		if(urlMd.endsWith("png") || urlMd.endsWith("jpg") || urlMd.endsWith("jpeg")) {
+			return "image";
+		}else if(urlMd.endsWith("mp4") || urlMd.endsWith("wmv") || urlMd.endsWith("mpg") || urlMd.endsWith("avi")) {
+			return "video";
+		}
+		return "image";
+	}
+
+	/**
+	* Método para resgatar o tipo MYME do vídeo.
+	* @param String urlMd Vai indicar a url da mídia
+	* @return String
+	*/
+	public String getVideoType(String urlMd) {
+		if(urlMd.endsWith("mp4")) {
+			return "video/mp4";
+		}else if(urlMd.endsWith("wmv")) {
+			return "video/wmv";
+		}else if(urlMd.endsWith("mpg")) {
+			return "video/mpg";
+		}else if(urlMd.endsWith("avi")) {
+			return "video/avi";
+		}
+		return "video/mp4";
+		
+	}
 }

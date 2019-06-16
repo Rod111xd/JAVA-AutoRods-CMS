@@ -9,6 +9,7 @@ body {
 	margin:0 !important;
 	padding:0 !important;
 }
+
 .header-img {
 	background-image: url("#{resource['imgs/bonito.png']}");
 	background-repeat: no-repeat;
@@ -26,7 +27,6 @@ body {
 .content-box1 {
 	background-color: white;
 	height:auto;
-	margin-bottom:30px;
 }
 .content-box2 {
 	background-color: white;
@@ -56,6 +56,15 @@ body {
 .cardImage {
 	width:100%;
 	height: 200px !important;
+}
+.cardVideo {
+	width:100%;
+	height: 400px !important;
+}
+.userImage {
+	width:80%;
+	height: 150px !important;
+	border-radius: 50px;
 }
 
 .image-preview {
@@ -97,6 +106,12 @@ body {
 	width: 100%;
 	height:300px;
 }
+.noLoginDetails {
+	background-color:#1b1c1d;
+	padding:10px;
+	color:white;
+	font-size:20px;
+}
 .adminDetails {
 	background-color:#1b1c1d;
 	padding:10px;
@@ -104,6 +119,11 @@ body {
 	font-size: 25px;
 	text-align:center;
 }
+.adminDetails a, .adminDetails a:hover {
+	color:white;
+	text-decoration:none;
+}
+	
 .userDetails {
 	background-color:#1b1c1d;
 	padding:25px;
@@ -135,6 +155,10 @@ h1,h2,h3,h4,h5,h6 {
 	margin-top:15px;
 	text-align: justify;
 }
+.itemBreak {
+	word-
+	
+}
 .noLink {
 	color:black;
 }
@@ -164,4 +188,31 @@ h1,h2,h3,h4,h5,h6 {
 	width:100% !important;
 	height:200px;
 	resize:none;
+}
+.postDetails {
+	background-color:#1e1e1e;
+	color:white;
+	font-weight:800;
+	padding:10px;
+	margin-bottom:30px;
+}
+
+@media only screen and (max-width: 640px) {
+	.header-img {
+		height:220px;
+	}
+	.loginContentMargin {
+	  padding:0;
+	  margin:0;
+	}
+	.loginContent {
+		padding:50px;
+		height:auto;
+	}
+	.descContent {
+		height:auto;
+	}
+	.postBanner {
+		height:250px;
+ }
 }

@@ -6,6 +6,12 @@ import java.sql.ResultSet;
 
 import model.Admin;
 
+/**
+* Controle para o Admin.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package bean
+*/
+
 public class AdminControl {
 	
 	public Admin login(Admin admin) {

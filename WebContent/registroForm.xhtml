@@ -19,7 +19,7 @@
 </h:head>
 
 <h:body>
-	<div id="registroForm" data-entrance="from-right">
+	<div id="registroForm" data-entrance="from-left">
 		<h:form enctype="multipart/form-data">
 			<h1 class="uk-heading-small" style="margin:0;">Cadastrar <span class="uk-icon" uk-icon="icon:plus-circle" ratio="2"></span></h1>
 			<div class="uk-grid uk-grid-small" uk-grid="">
@@ -49,17 +49,25 @@
 				<div class="uk-width-1-2">
 					<span class="uk-icon" uk-icon="icon:lock"></span>
 					<h:outputLabel class="uk-form-label">Confirmação de senha</h:outputLabel> 
-					<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{senhaConfirmacaoRegistro}" class="uk-input" p:placeholder="Confirme sua senha"/><br/><br/>
+					<h:inputSecret id="senhaConfirmacaoRegistro" name="senhaConfirmacaoRegistro" value="#{UserBean.passwordConfirm}" class="uk-input" p:placeholder="Confirme sua senha"/>
+				</div>
+				<div class="uk-width-1-1">
+					<div class="cb">
+						<h:selectManyCheckbox value = "#{UserBean.preferences}"> 
+						   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
+						   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
+						   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
+						   <f:selectItem itemValue = "truck" itemLabel = "Caminhão" /><br/>
+						   <f:selectItem itemValue = "airplane" itemLabel = "Avião" />
+						   <f:selectItem itemValue = "helicopter" itemLabel = "Helicóptero" />
+						   <f:selectItem itemValue = "boat" itemLabel = "Barco" />
+						   <f:selectItem itemValue = "ship" itemLabel = "Navio" />
+						</h:selectManyCheckbox>
+					</div>	
 				</div>
 			</div>
-			<h:selectManyCheckbox value = "#{UserBean.preferences}"> 
-			   <f:selectItem itemValue = "car" itemLabel = "Carro" /> 
-			   <f:selectItem itemValue = "motocicle" itemLabel = "Moto" />
-			   <f:selectItem itemValue = "bus" itemLabel = "Ônibus" />
-			   <f:selectItem itemValue = "truck" itemLabel = "Caminhão" />
-			</h:selectManyCheckbox>
-			
-			
+						
+				
 			
 			<h:commandButton action="#{UserBean.addUser()}" value="Cadastrar" class="uk-button uk-button-secondary"/> <br/>
 			<h:outputLink value="#" onclick="mudarFormulario('login')">Já possui uma conta? Clique aqui.</h:outputLink> 
@@ -71,7 +79,6 @@
 	<h:outputScript  name="js/uikit-icons.min.js" />
 	<h:outputScript  name="js/alertify.min.js" />
 	<h:outputScript  name="js/javinha.js" />
-	<h:outputScript  name="js/scroll-entrance.js" />
 	<h:outputScript  name="js/uploadPreview.min.js" />
 	<h:outputScript>
 		$(document).ready(function() {
@@ -87,5 +94,6 @@
 		var cw = $('#image-preview').width() - 30;
 		$('#image-preview').css({'height':cw+'px'});
 	</h:outputScript>
+	<h:outputScript  name="js/scroll-entrance.js" />
 </h:body>
 </html>

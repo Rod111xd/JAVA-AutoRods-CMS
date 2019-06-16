@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.Part;
 
@@ -131,6 +132,87 @@ public class PostControl {
 		return list;
 	}
 	
+	public ArrayList<Post> listPostsByRecommendation(List<String> pref){
+		ArrayList<Post> list=null;
+		try {
+			Connection connect= new Conexao().abrirConexao();
+			String queryCat = "";
+			boolean first = false;
+			if(pref.contains("Carro")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='car' ";
+				first = true;
+			}
+			if(pref.contains("Moto")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='motocicle' ";
+				first = true;
+			}
+			if(pref.contains("Onibus")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='bus' ";
+				first = true;
+			}
+			if(pref.contains("Caminhao")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='truck' ";
+				first = true;
+			}
+			if(pref.contains("Aviao")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='airplane' ";
+				first = true;
+			}
+			if(pref.contains("Helicoptero")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='helicopter' ";
+				first = true;
+			}
+			if(pref.contains("Barco")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='boat' ";
+				first = true;
+			}
+			if(pref.contains("Navio")) {
+				if(first) {
+					queryCat = queryCat + " OR ";
+				}
+				queryCat = queryCat + " category='ship' ";
+				first = true;
+			}
+			String sql="SELECT * FROM Post WHERE "+queryCat+" ORDER BY date DESC LIMIT 10";
+			PreparedStatement ps= connect.prepareStatement(sql);
+			ResultSet rs= ps.executeQuery();
+			if(rs!=null) {
+				list = new ArrayList<Post>();
+				while(rs.next()) {
+					Media md = new MediaControl().selectMediaByPost(rs.getInt("id"));
+					Post post= new Post(rs.getInt("id"),rs.getString("title"),rs.getString("subtitle"),rs.getString("text"),translateType(rs.getString("type")),translateCategory(rs.getString("category")),rs.getString("date"),rs.getInt("views"),rs.getInt("id_admin"),md.getUrlMedia());
+					list.add(post);
+				}
+				
+			}
+			new Conexao().fecharConexao(connect);
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return list;
+	}
+	
 	public Post selectPost(int id) {
 		Post result= null;
 		try {
@@ -150,7 +232,7 @@ public class PostControl {
 		return result;
 	}
 	
-	public boolean editPost(Post post,Part arquivo,String arquivoNome) {
+	public boolean editPost(Post post,Part arquivo,String arquivoNome,String urlMd) {
 		boolean result = false;
 		try {
 			Connection connect= new Conexao().abrirConexao();
@@ -164,16 +246,20 @@ public class PostControl {
 			ps.setString(6, post.getDate());
 			ps.setInt(7, post.getId());
 			if(!ps.execute()) {
-				String path = "C:\\Users\\Ronald\\eclipse-workspace\\AutoRods\\WebContent\\resources\\imgs\\posts\\";
-				String userFolder = path+post.getId();
-				new MediaControl().deleteFolder(userFolder);
-				File directory = new File(userFolder);
-				if(!directory.exists()) {
-					directory.mkdir();
+				String reducedFinalDirectory = urlMd;
+				if(arquivo!=null) {
+					String path = "C:\\Users\\Ronald\\eclipse-workspace\\AutoRods\\WebContent\\resources\\imgs\\posts\\";
+					String userFolder = path+post.getId();
+					new MediaControl().deleteFolder(userFolder);
+					File directory = new File(userFolder);
+					if(!directory.exists()) {
+						directory.mkdir();
+					}
+					String finalDirectory = userFolder+"\\"+arquivoNome; 
+					arquivo.write(finalDirectory);
+					reducedFinalDirectory = "imgs/posts/"+post.getId()+"/"+arquivoNome;
 				}
-				String finalDirectory = userFolder+"\\"+arquivoNome; 
-				arquivo.write(finalDirectory);
-				String reducedFinalDirectory = "imgs/posts/"+post.getId()+"/"+arquivoNome;
+				
 				Media media = new Media(0,reducedFinalDirectory,post.getId(),0);
 				if(new MediaControl().editMedia(media)) {
 					result=true;
@@ -257,6 +343,18 @@ public class PostControl {
 			break;
 		case "truck":
 			categoryVar = "Caminhão";
+			break;
+		case "airplane":
+			categoryVar = "Avião";
+			break;
+		case "helicopter":
+			categoryVar = "Helicóptero";
+			break;
+		case "boat":
+			categoryVar = "Barco";
+			break;
+		case "ship":
+			categoryVar = "Navio";
 			break;
 			default:
 		}

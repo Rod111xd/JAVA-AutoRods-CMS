@@ -13,10 +13,29 @@
 	<h:outputStylesheet  name="css/uikit.min.css" />
 	<h:outputStylesheet  name="css/alertify.min.css" />
 	<h:outputStylesheet  name="css/style.css" />
+	<link rel="icon" type="image/png" href="#{resource['imgs/favicon.png']}"/>
 	<title>AutoRods</title>
+	<script>
+		function ajaxOnevent(data) {
+	        var ajaxstatus = data.status; // Can be "begin", "complete" and "success"
+	
+	        switch (ajaxstatus) {
+	            case "begin": // This is called right before ajax request is been sent.
+	            	document.getElementById("ajaxloader").style.display = 'block';
+	            	document.getElementById("result-screen").style.display = 'none';
+	                break;
+	            case "success": // This is called when ajax response is successfully processed.
+	                // NOOP.
+	                document.getElementById("ajaxloader").style.display = 'none';
+	            	document.getElementById("result-screen").style.display = 'block';
+	            	showFirstPosts();
+	                break;
+	        }
+	    };
+	</script>
 </h:head>
 
-<h:body>
+<h:body onload="pageLoad()">
 	<div class="header-img"></div>
 	<div id="menu" class="uk-navbar-container uk-light" style="background-color:#1e1e1e">
 		<div class="uk-navbar" uk-navbar="">
@@ -25,7 +44,7 @@
 		        <ul class="uk-navbar-nav">
 		            <li class="uk-active"><h:outputLink value="index.xhtml"><span class="uk-icon" uk-icon="icon:home"></span> Início</h:outputLink></li>
 		            <h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
-						<li class="uk-active"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
+						<li class="uk-active uk-visible@m"><h:outputLink value="addPost.xhtml"><span class="uk-icon" uk-icon="icon:world"></span> Criar</h:outputLink></li>
 					</h:panelGroup>
 		        </ul>
 		
@@ -54,6 +73,11 @@
 		<div class="uk-grid contentGrid" uk-grid="">
 		    <div class="uk-width-1-3@s uk-width-1-3@l">
 			    <div class="content-box1">
+			    	<h:panelGroup rendered="#{not UserLogin.logged and not AdminLogin.logged}">
+			    		<div class="noLoginDetails">
+			    			<h:outputLink value="login.xhtml">Você não está logado. Clique aqui para entrar ou criar uma conta.</h:outputLink>
+			    		</div>
+			    	</h:panelGroup>
 			    	<h:panelGroup layout="block" rendered="#{AdminLogin.logged}">
 						<div class="adminDetails">
 				    		<h:outputText value="#{AdminLogin.name}"/>
@@ -62,8 +86,7 @@
 					<h:panelGroup layout="block" rendered="#{UserLogin.logged}">
 						<div class="userDetails">
 				    		<h:outputText value="#{UserLogin.name}"/>
-				    		<h:outputText rendered="#{not empty UserLogin.preferences}" value="#{UserLogin.preferences}"/>
-				    		<h:graphicImage  name="#{UserLogin.avatar}" class="cardImage"/>
+				    		<h:graphicImage  name="#{UserLogin.avatar}" class="uk-image userImage"/>
 				    	</div>
 					</h:panelGroup>
 				    <div class="uk-inline lateral-menu">
@@ -71,29 +94,43 @@
 				    		<h:outputLabel class="uk-form-label">PESQUISA</h:outputLabel>
 							<h:inputText id="pesquisa" name="pesquisa" value="#{PostBean.pesquisa}" class="uk-input" p:placeholder="Pesquisar.."/><br/><br/>
 							<h:commandButton action="#{PostBean.searchTitle()}" value="Pesquisar" class="uk-button uk-button-secondary">
-								<f:ajax execute="pesquisa" render="postsRepeat"/>
+								<f:ajax execute="pesquisa" onevent="ajaxOnevent" render="postsRepeat"/>
 								<f:ajax render="cleanSearch"/>
 							</h:commandButton>
 							<h:panelGroup id="cleanSearch">
-								<h:form rendered="#{not empty PostBean.pesquisa}">
+								<h:form rendered="#{not empty PostBean.pesquisa or not empty PostBean.category or PostBean.recommendation}">
 									<h:commandButton class="uk-button" value="Limpar">
 										<f:ajax listener="#{PostBean.cleanSearch()}" render="searchForm:pesquisa"/>
-										<f:ajax execute="pesquisa" render="postsRepeat"/>
+										<f:ajax execute="pesquisa" onevent="ajaxOnevent" render="postsRepeat"/>
 										<f:ajax render="searchForm:cleanSearch"/>
 									</h:commandButton>
 								</h:form>
 							</h:panelGroup>
 					    </h:form>
-					    <h:panelGroup rendered="#{not AdminLogin.logged}">
+					    <h:panelGroup rendered="#{UserLogin.logged}">
+					    	<hr class="uk-divider-icon"/>
 					    	<h:form >
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('car')}" value="Carros"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('motocicle')}" value="Motos"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('bus')}" value="Ônibus"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('truck')}" value="Caminhões"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('airplane')}" value="Aviões"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('helicopter')}" value="Helicópteros"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('boat')}" value="Barcos"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
-								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('ship')}" value="Navios"><f:ajax render="postsRepeat"/><f:ajax render="cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-secondary uk-width-1-1" action="#{PostBean.searchRecommendation(UserLogin.preferences)}" value="Recomendações"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+					    	</h:form>
+					    	<h3>Suas preferências</h3>
+					    	<ui:repeat var="pf" value="#{UserLogin.preferences}">
+					    		#{pf}
+					    	</ui:repeat>
+					    	<hr class="uk-divider-icon"/>
+					    </h:panelGroup>
+					    <h:panelGroup rendered="#{not AdminLogin.logged}">
+					    	<h:panelGroup rendered="#{not UserLogin.logged}">
+					    		<hr class="uk-divider-icon"/>
+					    	</h:panelGroup>
+					    	<h:form >
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('car')}" value="Carros"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('motocicle')}" value="Motos"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('bus')}" value="Ônibus"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('truck')}" value="Caminhões"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('airplane')}" value="Aviões"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('helicopter')}" value="Helicópteros"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('boat')}" value="Barcos"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
+								<h:commandLink class="uk-button uk-button-primary uk-width-1-2" action="#{PostBean.searchCategory('ship')}" value="Navios"><f:ajax onevent="ajaxOnevent" render="postsRepeat"/><f:ajax render="searchForm:cleanSearch"/></h:commandLink>
 				        	</h:form>
 					    </h:panelGroup>
 					    <h:panelGroup rendered="#{AdminLogin.logged}">
@@ -106,45 +143,80 @@
 		    <div class="uk-width-2-3@s uk-width-2-3@l">
 			    <div class="content-box2">
 			    	
-			    	
-			    	<h:panelGroup id="postsRepeat">
-				    	<div class="uk-grid contentGrid" uk-grid="">
-				    		<h:panelGrid rendered="#{empty PostBean.list}">
-			    				<p>Não há o que exibir :(</p>
-			    			</h:panelGrid>
-				    		<ui:repeat var="post" value="#{PostBean.list}">
-						    	<div class='uk-width-1-2@s uk-width-1-2@l'>
-									<div class='uk-card uk-card-default uk-card-small uk-card-hover'>
-										<div class='uk-card-media-top'>
-											<h:link outcome="content.xhtml?id=#{post.id}">
-												<h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
-												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 5%" value="#">#{post.category}</h:outputLink>
-												<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 13%" value="#">#{post.type}</h:outputLink>
-												<h:panelGroup class="uk-position-absolute uk-transform-center" rendered="#{AdminLogin.id eq post.idAdmin}" style="left: 90%; top: 8%">
-								                	<div class="uk-inline">
-												    	<span class="uk-icon-button" uk-icon="icon: cog;ratio:1.6"></span>
-													    <div uk-dropdown="mode: click">
-													    		<a onclick="document.getElementById('formDelete:idDelete').value=#{post.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a><br/>
-										                		<h:outputLink value="editPost.xhtml?id=#{post.id}"><span class="uk-icon" uk-icon="icon:pencil"></span></h:outputLink>
-													    </div>
-													</div>
-								                </h:panelGroup>
-											</h:link>
-							            </div>
-							            <div class='uk-card-body'>
-							                <h3 class='uk-card-title'>
-							                <h:link outcome="content.xhtml?id=#{post.id}" class="noLink">
-							                	#{post.title}
-							                </h:link>
-							                </h3>
-							                
-							                <p>#{post.subtitle}</p>
-							            </div>
-									</div>
-							    </div>
-							</ui:repeat>
-						</div>
-					</h:panelGroup>
+			    	<div id="ajaxloader" style="margin-top:20%;text-align:center">
+						<img src="resources/imgs/image401.gif" style="width:180px;height:180px;"/>
+		    		</div>
+		    		<div id="result-screen"  style="display:none">
+		    			<h:panelGroup id="postsRepeat">
+				    		<div class="postDetails">
+				    			<h:panelGroup rendered="#{empty PostBean.pesquisa and empty PostBean.category and not PostBean.recommendation}">
+				    				<span style="text-align:center">Página Inicial</span>
+				    			</h:panelGroup>
+			    				<h:panelGroup rendered="#{not empty PostBean.pesquisa}">
+				    				Exibindo: #{PostBean.pesquisa}
+				    			</h:panelGroup>
+				    			<h:panelGroup rendered="#{not empty PostBean.category}">
+				    				Exibindo: #{PostBean.category}
+				    			</h:panelGroup>
+				    			<h:panelGroup rendered="#{PostBean.recommendation}">
+				    				Exibindo recomendados para você
+				    			</h:panelGroup>
+			    			</div>
+				    		
+					    	<div class="uk-grid contentGrid" uk-grid="">
+					    		<h:panelGroup rendered="#{empty PostBean.list}">
+				    				<p>Não há o que exibir :(</p>
+				    			</h:panelGroup>
+				    			<ui:repeat var="lst" value="#{PostBean.list}"  varStatus="status">
+				    					<ui:repeat var="post" value="#{lst}" >
+									    	<div class='uk-width-1-2@s uk-width-1-2@l posts-#{status.index}' style="display:none;">
+												<div class='uk-card uk-card-default uk-card-small uk-card-hover'>
+													<div class='uk-card-media-top'>
+														<h:link outcome="content.xhtml?id=#{post.id}">
+															<h:panelGroup rendered="#{PostBean.mediaType(post.urlMedia) eq 'video'}">
+																<video class="cardImage">
+																  	<source src="#{resource[post.urlMedia]}" type="#{PostBean.getVideoType(post.urlMedia)}"/>
+																	Parceiro, teu browser não ta suportando não..
+																</video>
+															</h:panelGroup>
+															<h:panelGroup rendered="#{PostBean.mediaType(post.urlMedia) eq 'image'}">
+																<h:graphicImage  name='#{post.urlMedia}' class='cardImage'/>
+															</h:panelGroup>
+															<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 5%" value="#">#{post.category}</h:outputLink>
+															<h:outputLink class="uk-label uk-position-absolute uk-transform-center" style="left: 17%; top: 13%" value="#">#{post.type}</h:outputLink>
+															<h:outputLink rendered="#{UserLogin.preferences.contains(post.category)}" class="uk-label uk-label-danger uk-position-absolute uk-transform-center" style="left: 77%; top: 5%" value="#">Recomendado</h:outputLink>
+															<h:panelGroup class="uk-position-absolute uk-transform-center" rendered="#{AdminLogin.id eq post.idAdmin}" style="left: 90%; top: 8%">
+											                	<div class="uk-inline">
+															    	<span class="uk-icon-button" uk-icon="icon: cog;ratio:1.6"></span>
+																    <div uk-dropdown="mode: click">
+																    		<a onclick="document.getElementById('formDelete:idDelete').value=#{post.id};" class="removeButton"><span class="uk-icon" uk-icon="icon:close"></span></a><br/>
+													                		<h:outputLink value="editPost.xhtml?id=#{post.id}"><span class="uk-icon" uk-icon="icon:pencil"></span></h:outputLink>
+																    </div>
+																</div>
+											                </h:panelGroup>
+														</h:link>
+										            </div>
+										            <div class='uk-card-body'>
+										                <h3 class='uk-card-title'>
+										                <h:link outcome="content.xhtml?id=#{post.id}" class="noLink">
+										                	#{post.title} 
+										                </h:link>
+										                </h3>
+										                
+										                <p>#{post.subtitle}</p>
+										            </div>
+												</div>
+										    </div>
+										</ui:repeat>
+										<h:panelGroup rendered="#{not status.last}">
+											<div id="posts-#{status.index}-button" class="uk-width-1-1" style="display:none;">
+												<a onclick="$(this).hide(50);$('.posts-#{PostBean.sumIndex(status.index)}').show(150)" class="uk-button uk-button-default buttonFill">Ver mais ...</a>
+											</div>
+										</h:panelGroup>
+								</ui:repeat>
+							</div>
+						</h:panelGroup>
+		    		</div>
 			    </div>
 		    </div>
 		</div>
@@ -163,10 +235,10 @@
 	<h:outputScript  name="js/uikit.min.js" />
 	<h:outputScript  name="js/uikit-icons.min.js" />
 	<h:outputScript  name="js/alertify.min.js" />
+	<h:outputScript  name="js/jquery.sticky-kit.min.js" />
 	<script>
-		var pesq = document.getElementsByClassName("content-box1");
 		if (window.matchMedia('(min-width: 640px)').matches){
-			UIkit.sticky(pesq[0],{offset: 20});
+			$(".content-box1").stick_in_parent();
 		}
 		
 		if(!alertify.myAlert){
@@ -191,10 +263,20 @@
 			  }});
 			}
 		$('.removeButton').click(function(){
-			alertify.myAlert($('#deletePostModal').html()).resizeTo('40%','30%').setHeader('<h2>Deseja remover publicação?</h2>');
+			alertify.myAlert($('#deletePostModal').html()).resizeTo('40%','35%').setHeader('<h2>Remover publicação?</h2>');
 		})
 
+		function showFirstPosts(){
+			$('.posts-0').show();
+			$('#posts-0-button').show();
+		}
 		
+		function pageLoad() {
+			document.getElementById('ajaxloader').style.display = "none";
+			document.getElementById('result-screen').style.display = "block";
+			showFirstPosts();
+		}	    
+			
 	</script>
 	
 </h:body>
