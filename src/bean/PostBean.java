@@ -317,6 +317,11 @@ public class PostBean {
 		this.setLista(sliceArray(postList));
 	}
 	
+	/**
+	* Método para dividir uma lista em várias.
+	* @param ArrayList<Post> Lista que vai ser cortada
+	* @return ArrayList<ArrayList<Post>>
+	*/
 	public ArrayList<ArrayList<Post>> sliceArray(ArrayList<Post> lst) {
 		System.out.println(lst.size());
 		ArrayList<ArrayList<Post>> arraySliced = new ArrayList<ArrayList<Post>>();
@@ -350,6 +355,11 @@ public class PostBean {
 		searchTitle();
 	}
 	
+	/**
+	* Método para incrementar o índice.
+	* @param ind Índice a ser incrementado
+	* @return int
+	*/
 	public int sumIndex(int ind) {
 		return ind+1;
 	}

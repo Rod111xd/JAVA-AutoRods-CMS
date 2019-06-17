@@ -4,7 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 
+/**
+* Controle para a Conexão.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public final class Conexao {
+	/**
+	* Método para abrir a conexão
+	* @return Connection
+	*/
 	public Connection abrirConexao() {
 		Connection connect = null;
 		try {
@@ -22,6 +31,10 @@ public final class Conexao {
 		return connect;
 	}
 	
+	/**
+	* Método para fazer o login do admin
+	* @param Connection con Conexão a ser fechada
+	*/
 	public void fecharConexao(Connection con) {
 		try {
 			con.close();

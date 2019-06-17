@@ -21,8 +21,20 @@ import com.mysql.jdbc.Statement;
 import control.Conexao;
 import control.Crypt;
 
+/**
+* Controle para o Usuário.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class UserControl {
 
+	/**
+	* Método para cadastrar um usuário
+	* @param User user Usuário a ser cadastrado
+	* @param Part arquivo Imagem do usuário a ser cadastrado
+	* @param String arquivoNome Nome do arquivo de imagem do usuário
+	* @return boolean
+	*/
 	public boolean insertUser(User user,Part arquivo,String arquivoNome) {
 		boolean result = false;
 		try {
@@ -88,6 +100,12 @@ public class UserControl {
 		return result;
 	}
 	
+	/**
+	* Método para inserir as preferências do usuário
+	* @param int id_user Id do usuário
+	* @param String pref Preferência do usuário
+	* @return boolean
+	*/
 	public boolean insertPreference(int id_user,String pref) {
 		boolean result = false;
 		try {
@@ -125,7 +143,11 @@ public class UserControl {
 		return result;
 	}
 	
-	
+	/**
+	* Método para fazer a checagem de existência de um email no banco
+	* @param String email Email a ser checado
+	* @return boolean
+	*/
 	public boolean checkEmail(String email) {
 		boolean result = false;
 		try {
@@ -145,6 +167,11 @@ public class UserControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer o login do usuário
+	* @param User user Usuário a ser logado
+	* @return User
+	*/
 	public User login(User user) {
 		User result= null;
 		try {
@@ -203,6 +230,11 @@ public class UserControl {
 		return result;
 	}
 	
+	/**
+	* Método para retornar o nome do usuário
+	* @param int id Id do usúário
+	* @return String
+	*/
 	public String getUserName(int id) {
 		String result= null;
 		try {

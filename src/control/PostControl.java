@@ -15,7 +15,20 @@ import com.mysql.jdbc.Statement;
 import model.Media;
 import model.Post;
 
+/**
+* Controle para a Publicação.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class PostControl {
+	
+	/**
+	* Método para fazer a adição de publicações
+	* @param Post post Publicação a ser adicionada
+	* @param Part arquivo Arquivo de mídia a ser adicionada
+	* @param String arquivoNome Nome do arquivo de mídia a ser adicionado
+	* @return boolean
+	*/
 	public boolean addPost(Post post,Part arquivo,String arquivoNome) {
 		boolean result = false;
 		try {
@@ -57,6 +70,10 @@ public class PostControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a seleção de publicações
+	* @return ArrayList<Post>
+	*/
 	public ArrayList<Post> listPosts(){
 		System.out.println("gfdhdfhdh");
 		ArrayList<Post> list=null;
@@ -84,6 +101,11 @@ public class PostControl {
 		return list;
 	}
 	
+	/**
+	* Método para fazer a seleção de publicações a partir de um título
+	* @param String title Título a ser pesquisado
+	* @return ArrayList<Post>
+	*/
 	public ArrayList<Post> listPostsSearchTitle(String title){
 		ArrayList<Post> list=null;
 		try {
@@ -108,6 +130,11 @@ public class PostControl {
 		return list;
 	}
 	
+	/**
+	* Método para fazer a seleção de publicações a partir de uma categoria
+	* @param String cat Categoria a ser pesquisada
+	* @return ArrayList<Post>
+	*/
 	public ArrayList<Post> listPostsSearchCategory(String cat){
 		ArrayList<Post> list=null;
 		try {
@@ -132,6 +159,11 @@ public class PostControl {
 		return list;
 	}
 	
+	/**
+	* Método para fazer a seleção de publicações a partir das recomendações de um usuário
+	* @param List<String> pref Preferências do usuário
+	* @return ArrayList<Post>
+	*/
 	public ArrayList<Post> listPostsByRecommendation(List<String> pref){
 		ArrayList<Post> list=null;
 		try {
@@ -213,6 +245,11 @@ public class PostControl {
 		return list;
 	}
 	
+	/**
+	* Método para fazer a seleção de uma única publicação
+	* @param int id Id da publicação a ser selecionada
+	* @return Post
+	*/
 	public Post selectPost(int id) {
 		Post result= null;
 		try {
@@ -232,6 +269,14 @@ public class PostControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a edição de uma publicação
+	* @param Post post Publicação a ser editada
+	* @param Part arquivo Mídia a ser editada
+	* @param String arquivoNome Nome do arquivo de mídia a ser editado
+	* @param String urlMd Endereço do atual arquivo de mídia
+	* @return boolean
+	*/
 	public boolean editPost(Post post,Part arquivo,String arquivoNome,String urlMd) {
 		boolean result = false;
 		try {
@@ -274,6 +319,11 @@ public class PostControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a remoção de publicações
+	* @param int id Id da publicação a ser removida
+	* @return boolean
+	*/
 	public boolean deletePost(int id) {
 		boolean result = false;
 		try {
@@ -293,6 +343,11 @@ public class PostControl {
 		return result;
 	}
 	
+	/**
+	* Método para incrementar as visualizações de uma publicação
+	* @param int id Id da publicação
+	* @return boolean
+	*/
 	public boolean addView(int id) {
 		boolean result = false;
 		try {
@@ -312,6 +367,11 @@ public class PostControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a tradução dos tipos de publicação
+	* @param String type Tipo a ser traduzido
+	* @return String
+	*/
 	public String translateType(String type) {
 		String typeVar = type;
 		switch(type) {
@@ -329,6 +389,11 @@ public class PostControl {
 		return typeVar;
 	}
 	
+	/**
+	* Método para fazer a tradução das categorias de publicação
+	* @param String category Categoria a ser traduzida
+	* @return String
+	*/
 	public String translateCategory(String category) {
 		String categoryVar = category;
 		switch(categoryVar) {

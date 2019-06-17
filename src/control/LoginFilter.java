@@ -13,9 +13,19 @@ import javax.servlet.http.HttpServletResponse;
 import bean.UserLogin;
 import bean.AdminLogin;
 
+/**
+* Classe para o filtro da sessão.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class LoginFilter implements Filter {
 
-	
+	/**
+	* Método para fazer a filtragem
+	* @param ServletRequest Representa a requisição
+	* @param ServletResponse Representa a resposta
+	* @param FilterChain Representa a malha do filtro
+	*/
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;

@@ -9,11 +9,15 @@ import model.Admin;
 /**
 * Controle para o Admin.
 * @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
-* @package bean
+* @package control
 */
 
 public class AdminControl {
-	
+	/**
+	* Método para fazer o login do admin
+	* @param Admin admin Objeto admin para fazer o login
+	* @return Admin
+	*/
 	public Admin login(Admin admin) {
 		Admin result= null;
 		try {
@@ -33,6 +37,11 @@ public class AdminControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a seleção do Admin.
+	* @param int id Id do admin a ser selecionado
+	* @return Admin
+	*/
 	public Admin selectAdmin(int id) {
 		Admin result= null;
 		try {

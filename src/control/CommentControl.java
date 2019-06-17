@@ -6,9 +6,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-
 import model.Comment;
+
+/**
+* Controle para os Comentários.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class CommentControl {
+	/**
+	* Método para fazer a adição de comentários
+	* @param Comment comment Comentário a ser adicionado
+	* @return boolean
+	*/
 	public boolean addComment(Comment comment) {
 		boolean result = false;
 		try {
@@ -36,6 +46,11 @@ public class CommentControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer o listagem dos comentários a partir do id da publicação
+	* @param int id id da publicação
+	* @return ArrayList<Comment>
+	*/
 	public ArrayList<Comment> listCommentsByPost(int idPost){
 		ArrayList<Comment> list=null;
 		ArrayList<Comment> replyList=null;
@@ -74,6 +89,11 @@ public class CommentControl {
 		return list;
 	}
 	
+	/**
+	* Método para fazer o a edição dos comentários
+	* @param Comment comment Dados para fazer a edição
+	* @return boolean
+	*/
 	public boolean editComment(Comment comment) {
 		boolean result = false;
 		try {
@@ -105,6 +125,11 @@ public class CommentControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a remoção de comentários
+	* @param int id Id do comentário
+	* @return boolean
+	*/
 	public boolean deleteComment(int id) {
 		boolean result = false;
 		try {
@@ -130,6 +155,11 @@ public class CommentControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a remoção de comentários a partir da publicação
+	* @param int id Id da publicação
+	* @return boolean
+	*/
 	public boolean deleteCommentsByPost(int id) {
 		boolean result = false;
 		try {

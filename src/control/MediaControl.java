@@ -12,8 +12,18 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import model.Media;
 
+/**
+* Controle para a Mídia.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class MediaControl {
 	
+	/**
+	* Método para fazer a adição de Mídia
+	* @param Media media Mídia a ser adicionada
+	* @return boolean
+	*/
 	public boolean addMedia(Media media) {
 		boolean result = false;
 		try {
@@ -43,6 +53,11 @@ public class MediaControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer seleção de Mídia a partir da publicação
+	* @param int id_post Id da publicação
+	* @return Media
+	*/
 	public Media selectMediaByPost(int id_post) {
 		Media result= null;
 		try {
@@ -64,6 +79,11 @@ public class MediaControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer seleção de Mídia a partir do usuário
+	* @param int id_user Id do usuário
+	* @return Media
+	*/
 	public Media selectMediaByUser(int id_user) {
 		Media result= null;
 		try {
@@ -85,6 +105,11 @@ public class MediaControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a edição da Mídia
+	* @param Media media Mídia em questão para ser editada
+	* @return boolean
+	*/
 	public boolean editMedia(Media media) {
 		boolean result = false;
 		try {
@@ -110,6 +135,11 @@ public class MediaControl {
 		return result;
 	}
 	
+	/**
+	* Método para fazer a remoção de Mídia
+	* @param int id Id da mídia
+	* @return boolean
+	*/
 	public boolean deleteMedia(int id) {
 		boolean result = false;
 		try {
@@ -131,6 +161,10 @@ public class MediaControl {
 		return result;
 	}
 	
+	/**
+	* Método para apagar pasta
+	* @param String path Endereço da pasta
+	*/
 	public void deleteFolder(String path) throws IOException {
 		FileUtils.deleteDirectory(new File(path));
 	}

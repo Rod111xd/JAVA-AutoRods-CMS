@@ -7,8 +7,16 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
+/**
+* Classe para criptografia.
+* @author Rodrigo da Silva Freitas <rodrigojato@hotmail.com>
+* @package control
+*/
 public class Crypt {
-
+	/**
+	* Método para testar a criptografia
+	* @param String[] args Senha ser criptografada
+	*/
     public static void main(String[] args) throws Exception {
         String key = "abcdefghijklmop";
         String clean = "Quisque eget odio ac lectus vestibulum faucibus eget.";
@@ -16,7 +24,13 @@ public class Crypt {
         byte[] encrypted = encrypt(clean, key);
         String decrypted = decrypt(encrypted, key);
     }
-
+    
+    /**
+	* Método para fazer a criptografia
+	* @param String plainText Senha a ser criptografada
+	* @param String key Chave a ser usada na criptografia
+	* @return byte[]
+	*/
     public static byte[] encrypt(String plainText, String key) throws Exception {
         byte[] clean = plainText.getBytes();
 
@@ -46,7 +60,13 @@ public class Crypt {
 
         return encryptedIVAndText;
     }
-
+    
+    /**
+	* Método para fazer a descriptografia
+	* @param byte[] encriptedIvTextBytes Texto criptografado
+	* @param String key Chave a ser usada na descriptografia
+	* @return String
+	*/
     public static String decrypt(byte[] encryptedIvTextBytes, String key) throws Exception {
         int ivSize = 16;
         int keySize = 16;
